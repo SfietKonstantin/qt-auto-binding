@@ -68,3 +68,9 @@ notifications:
     email:
 
 on_success: never
+
+# Cache
+cache:
+  - cargo
+  - qt_installer
+  - /c/Qt/
