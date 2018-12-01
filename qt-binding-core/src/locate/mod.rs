@@ -177,18 +177,33 @@ impl QtInstall {
 /// generate source code. This locator is in charge of finding all the needed components that
 /// are needed to build Qt-based libraries.
 ///
-/// Locating Qt is based on locating `qmake`. Under Linux, `qmake` is usually found in `PATH`,
-/// but different versions of Qt can cohabit. Under Mac OS and Windows, different versions of Qt
-/// can be installed in arbitrary folders, and `qmake` might not be found in `PATH`.
+/// # Locating Qt
 ///
-/// By default, this function will *only* try to find `qmake` in `PATH`. You can help it by setting
-/// the `QT_INSTALL_DIR` environment variable. In this case, it will *only* search `qmake` in
-/// `${QT_INSTALL_DIR}/bin`.
+/// Locating Qt is based on locating `qmake`.
 ///
 /// When found, it will use `qmake -query`'s result to provide path to bin, lib and include
 /// directories, if Qt's version is supported.
 ///
-/// In the future, it might also try to use `qtchooser`.
+/// # Locating `qmake`
+///
+/// Under Linux, `qmake` is usually found in `PATH`. When different versions of Qt are available,
+/// `qtchooser` is usually packaged to select the version of Qt to use, via the `QT_SELECT`
+/// environment variable.
+///
+/// Under Mac OS X, Qt is available via homebrew. `qmake` is then made available in
+/// `/usr/local/opt/qt`.
+///
+/// Under Windows, Qt installation path is chosen when installing Qt. There is currently no way of
+/// finding `qmake` automatically.
+///
+/// By default, this function tries to find `qmake`
+/// - under Linux: in `PATH`
+/// - under Mac OS X: in `/usr/local/opt/qt/bin`
+///
+/// # Overriding Qt location
+///
+/// You can override Qt location with `QT_INSTALL_DIR` environment variable. If this variable is
+/// present, this function will *only* search `qmake` in `${QT_INSTALL_DIR}/bin`.
 ///
 /// # Examples
 ///
@@ -258,7 +273,7 @@ where
     }
 
     fn locate(&self) -> Result<QtInstall> {
-        let qmake = self.qmake_path();
+        let qmake = self.qmake_path()?;
 
         let result = self.spi.qmake_query(&qmake);
         let stdout = result.map_err(|error| Error::QMakeError {
@@ -272,16 +287,26 @@ where
         Ok(qt_install)
     }
 
-    fn qmake_path(&self) -> PathBuf {
+    fn qmake_path(&self) -> Result<PathBuf> {
         if let Some(qt_install_dir) = self.spi.qt_install_dir() {
             let bin_dir = "bin".to_string();
             let qmake_exec = QMAKE_EXEC.to_string();
 
-            [qt_install_dir, bin_dir, qmake_exec]
+            Ok([qt_install_dir, bin_dir, qmake_exec]
                 .iter()
-                .collect::<PathBuf>()
+                .collect::<PathBuf>())
         } else {
-            PathBuf::from(QMAKE_EXEC)
+            if cfg!(unix) {
+                if cfg!(target_os = "macos") {
+                    Ok(["/usr/local/opt/qt/bin", QMAKE_EXEC].iter().collect::<PathBuf>())
+                } else {
+                    Ok(PathBuf::from(QMAKE_EXEC))
+                }
+            } else if cfg!(windows) {
+                Err(Error::NoQmake)
+            } else {
+                panic!("Unsupported OS");
+            }
         }
     }
 

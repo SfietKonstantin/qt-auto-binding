@@ -61,12 +61,19 @@ impl QMakeError {
 /// - Qt installation is incomplete
 #[derive(Debug, Fail)]
 pub enum Error {
+    /// No `qmake`
+    ///
+    /// This error happens when `qmake` cannot be found by default. This is the case under Windows,
+    /// where `qmake` is neither in the `PATH` nor in a known folder. It is mandatory to
+    /// set `QT_INSTALL_DIR` in this case.
+    #[fail(display = "Unable to find `qmake` without QT_INSTALL_DIR")]
+    NoQmake,
     /// `qmake` error
     ///
     /// This error happens when `qmake` failed.
     /// This could be either because `qmake` could not be found
     /// or because `qmake` execution failed.
-    #[fail(display = "Failed to run {}", qmake)]
+    #[fail(display = "Failed to run `{}`", qmake)]
     QMakeError {
         /// Path to `qmake`
         qmake: String,
@@ -79,7 +86,7 @@ pub enum Error {
     /// This error happens when `qmake -query` provides information
     /// that could not be understood.
     #[fail(
-        display = "Could not find Qt with {}. Check qmake -query's output",
+        display = "Could not find Qt with `{}`. Check `qmake -query`'s output",
         qmake
     )]
     QMakeIncorrectInfo {

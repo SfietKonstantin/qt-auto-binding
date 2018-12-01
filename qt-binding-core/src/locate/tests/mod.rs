@@ -2,6 +2,22 @@ use super::*;
 use std::{cell::Cell, collections::HashSet};
 use Version;
 
+struct DummyLocatorSpi;
+
+impl LocateSpi for DummyLocatorSpi {
+    fn qt_install_dir(&self) -> Option<String> {
+        None
+    }
+
+    fn qmake_query(&self, _: &Path) -> StdResult<Vec<u8>, QMakeError> {
+        Ok(Vec::new())
+    }
+
+    fn exists(&self, _: &Path) -> bool {
+        true
+    }
+}
+
 struct LocatorTestSpi<I, Q>
 where
     I: Fn() -> Option<&'static str>,
@@ -80,6 +96,7 @@ fn test_read_prefixed_value() {
 }
 
 #[test]
+#[cfg(all(unix, not(target_os = "macos")))]
 fn test_locate_qt5_with_qmake_in_path() {
     let spi = LocatorTestSpi::new(
         || None,
@@ -98,14 +115,42 @@ fn test_locate_qt5_with_qmake_in_path() {
     assert_eq!(qt_install.lib_dir(), Path::new("/usr/lib64"));
     assert_eq!(qt_install.include_dir(), Path::new("/usr/include/qt5"));
     assert_eq!(qt_install.moc(), Path::new("/usr/lib64/qt5/bin/moc"));
-    if cfg!(target_os = "macos") {
-        assert_eq!(qt_install.lib_name("Core"), "QtCore");
-    } else {
-        assert_eq!(qt_install.lib_name("Core"), "Qt5Core");
-    }
+    assert_eq!(qt_install.lib_name("Core"), "Qt5Core");
 }
 
 #[test]
+#[cfg(all(unix, target_os = "macos"))]
+fn test_locate_qt5_with_qmake_in_path() {
+    let spi = LocatorTestSpi::new(
+        || None,
+        |qmake| {
+            assert_eq!(qmake, Path::new("/usr/local/opt/qt/bin/qmake"));
+            Ok(include_str!("query_qt5.11.1.in"))
+        },
+    );
+
+    let locator = Locator::new(spi);
+    let qt_install = locator.locate().unwrap();
+
+    assert_eq!(qt_install.major_version(), &Version::Qt5);
+    assert_eq!(qt_install.version(), "5.11.1");
+    assert_eq!(qt_install.bin_dir(), Path::new("/usr/lib64/qt5/bin"));
+    assert_eq!(qt_install.lib_dir(), Path::new("/usr/lib64"));
+    assert_eq!(qt_install.include_dir(), Path::new("/usr/include/qt5"));
+    assert_eq!(qt_install.moc(), Path::new("/usr/lib64/qt5/bin/moc"));
+    assert_eq!(qt_install.lib_name("Core"), "QtCore");
+}
+
+#[test]
+#[should_panic]
+#[cfg(windows)]
+fn test_locate_qt5_fails_by_default() {
+    let locator = Locator::new(DummyLocatorSpi);
+    locator.locate().unwrap();
+}
+
+#[test]
+#[cfg(unix)]
 fn test_locate_qt4() {
     let spi = LocatorTestSpi::new(|| None, |_| Ok(include_str!("query_qt4.8.7.in")));
 
