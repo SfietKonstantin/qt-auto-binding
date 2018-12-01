@@ -1,0 +1,66 @@
+dist: xenial
+language: rust
+
+branches:
+    only:
+        - master
+        - /^v\d+\.\d+\.\d+.*$/
+
+# Matrix
+matrix:
+    include:
+        # Qt 5
+        - os: linux
+          env: QT_SELECT=5
+          rust: stable
+
+        - os: linux
+          env: QT_SELECT=5
+          rust: beta
+
+        - os: linux
+          env: QT_SELECT=5
+          rust: nightly
+
+        # Qt 4
+        - os: linux
+          env: QT_SELECT=4
+          rust: stable
+
+        - os: osx
+          env: QT_INSTALL_DIR=/usr/local/opt/qt
+          rust: stable
+
+        - os: osx
+          env: QT_INSTALL_DIR=/usr/local/opt/qt
+          rust: beta
+
+        - os: osx
+          env: QT_INSTALL_DIR=/usr/local/opt/qt
+          rust: nightly
+
+        - os: windows
+          rust: stable
+
+        - os: windows
+          rust: beta
+
+        - os: windows
+          rust: nightly
+
+    allow_failures:
+        - rust: nightly
+
+# Prerequisites
+before_install:
+    - bash ci/before_install.sh
+
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+
+# Notifications
+notifications:
+    email:
+
+on_success: never

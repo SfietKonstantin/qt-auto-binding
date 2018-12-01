@@ -1,0 +1,7 @@
+[package]
+name = "qt-binding-test"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+
+[dependencies]
+qt-binding-core = {path = "../qt-binding-core"}

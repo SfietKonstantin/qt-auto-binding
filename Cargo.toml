@@ -2,4 +2,5 @@
 
 members = [
     "qt-binding-core",
+    "qt-binding-test",
 ]
