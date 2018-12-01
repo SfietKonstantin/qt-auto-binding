@@ -1,0 +1,15 @@
+QT_INSTALL_PREFIX:/usr/lib64/qt4
+QT_INSTALL_DATA:/usr/lib64/qt4
+QT_INSTALL_DOCS:/usr/share/doc/qt4
+QT_INSTALL_HEADERS:/usr/include
+QT_INSTALL_LIBS:/usr/lib64
+QT_INSTALL_BINS:/usr/lib64/qt4/bin
+QT_INSTALL_PLUGINS:/usr/lib64/qt4/plugins
+QT_INSTALL_IMPORTS:/usr/lib64/qt4/imports
+QT_INSTALL_TRANSLATIONS:/usr/share/qt4/translations
+QT_INSTALL_CONFIGURATION:/etc
+QT_INSTALL_EXAMPLES:/usr/lib64/qt4/examples
+QT_INSTALL_DEMOS:/usr/lib64/qt4/demos
+QMAKE_MKSPECS:/usr/lib64/qt4/mkspecs
+QMAKE_VERSION:2.01a
+QT_VERSION:4.8.7

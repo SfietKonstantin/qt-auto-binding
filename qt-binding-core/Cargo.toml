@@ -1,0 +1,9 @@
+[package]
+name = "qt-binding-core"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+
+[dependencies]
+cc = "1.0"
+failure = "0.1"
+
