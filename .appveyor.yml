@@ -1,0 +1,45 @@
+# Config
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+\.\d+.*$/
+
+# Matrix
+environment:
+  global:
+    CRATE_NAME: qt-binding
+
+  matrix:
+    - TARGET: x86_64-pc-windows-msvc
+      RUST_VERSION: stable
+      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
+
+    - TARGET: x86_64-pc-windows-msvc
+      RUST_VERSION: beta
+      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
+
+    - TARGET: x86_64-pc-windows-msvc
+      RUST_VERSION: nightly
+      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
+
+# Pipeline
+install:
+  - curl -sSf -o rustup-init.exe https://win.rustup.rs/
+  - rustup-init.exe -y --default-host %TARGET% --default-toolchain %RUST_VERSION%
+  - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - rustc -Vv
+  - cargo -V
+
+build_script:
+  - cargo build --verbose
+
+test_script:
+  - cargo test --verbose
+
+cache:
+  - C:\Users\appveyor\.cargo\registry
+
+# Notifications
+notifications:
+  - provider: Email
+    on_build_success: false

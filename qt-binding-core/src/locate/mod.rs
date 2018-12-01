@@ -298,7 +298,9 @@ where
         } else {
             if cfg!(unix) {
                 if cfg!(target_os = "macos") {
-                    Ok(["/usr/local/opt/qt/bin", QMAKE_EXEC].iter().collect::<PathBuf>())
+                    Ok(["/usr/local/opt/qt/bin", QMAKE_EXEC]
+                        .iter()
+                        .collect::<PathBuf>())
                 } else {
                     Ok(PathBuf::from(QMAKE_EXEC))
                 }
@@ -412,9 +414,15 @@ impl QtInfo {
         }
     }
 
-    fn read_prefixed_value<'a>(input: &'a str, prefix: &'static str) -> Option<&'a str> {
+    fn read_prefixed_value(input: &str, prefix: &'static str) -> Option<String> {
         if input.starts_with(prefix) {
-            Some(&input[prefix.len()..])
+            let rest = &input[prefix.len()..];
+
+            if cfg!(windows) {
+                Some(rest.replace("/", "\\"))
+            } else {
+                Some(rest.to_string())
+            }
         } else {
             None
         }
@@ -422,14 +430,14 @@ impl QtInfo {
 
     fn read_item(input: &str) -> Option<QtInfo> {
         if let Some(version) = QtInfo::read_prefixed_value(input, "QT_VERSION:") {
-            Some(QtInfo::Version(version.to_string()))
+            Some(QtInfo::Version(version))
         } else if let Some(bin_dir) = QtInfo::read_prefixed_value(input, "QT_INSTALL_BINS:") {
-            Some(QtInfo::BinDir(bin_dir.to_string()))
+            Some(QtInfo::BinDir(bin_dir))
         } else if let Some(lib_dir) = QtInfo::read_prefixed_value(input, "QT_INSTALL_LIBS:") {
-            Some(QtInfo::LibDir(lib_dir.to_string()))
+            Some(QtInfo::LibDir(lib_dir))
         } else if let Some(include_dir) = QtInfo::read_prefixed_value(input, "QT_INSTALL_HEADERS:")
         {
-            Some(QtInfo::IncludeDir(include_dir.to_string()))
+            Some(QtInfo::IncludeDir(include_dir))
         } else {
             None
         }
