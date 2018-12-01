@@ -1,11 +1,6 @@
 dist: xenial
 language: rust
 
-branches:
-    only:
-        - master
-        - /^v\d+\.\d+\.\d+.*$/
-
 # Matrix
 matrix:
     include:
