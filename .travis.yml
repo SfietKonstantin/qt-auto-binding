@@ -42,16 +42,6 @@ matrix:
           env: QT_INSTALL_DIR=/usr/local/opt/qt
           rust: stable
 
-        # Windows Qt 5 manual
-        - os: windows
-          rust: stable
-
-        - os: windows
-          rust: beta
-
-        - os: windows
-          rust: nightly
-
     allow_failures:
         - rust: nightly
 
