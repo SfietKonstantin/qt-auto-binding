@@ -1,0 +1,4 @@
+QT_VERSION:5.123.456
+QT_INSTALL_HEADERS:c:/my/include
+QT_INSTALL_LIBS:c:/my/lib
+QT_INSTALL_BINS:c:/my/bin

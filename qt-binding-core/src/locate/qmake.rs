@@ -21,7 +21,7 @@ pub(crate) fn lib_file(lib: &str) -> String {
             format!("lib{}.so", lib)
         }
     } else if cfg!(windows) {
-        format!("{}.dll", lib)
+        format!("{}.lib", lib)
     } else {
         panic!("Unsupported OS");
     }
