@@ -16,6 +16,7 @@
 extern crate cc;
 extern crate failure;
 
+pub mod build;
 pub mod errors;
 pub mod locate;
 
