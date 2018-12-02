@@ -1,60 +1,69 @@
 dist: xenial
 language: rust
 
+# Config
+branches:
+  only:
+    - master
+    - /^v\d+\.\d+\.\d+.*$/
+
 # Matrix
 matrix:
-    include:
-        # Linux Qt 5
-        - os: linux
-          env: QT_SELECT=5
-          rust: stable
+  include:
+    # Linux Qt 5
+    - os: linux
+      env: QT_SELECT=5
+      rust: stable
 
-        - os: linux
-          env: QT_SELECT=5
-          rust: beta
+    - os: linux
+      env: QT_SELECT=5
+      rust: beta
 
-        - os: linux
-          env: QT_SELECT=5
-          rust: nightly
+    - os: linux
+      env: QT_SELECT=5
+      rust: nightly
 
-        # Linux Qt 4
-        - os: linux
-          env: QT_SELECT=4
-          rust: stable
+    # Linux Qt 4
+    - os: linux
+      env: QT_SELECT=4
+      rust: stable
 
-        # Linux Qt 5 manual
-        - os: linux
-          env: QT_INSTALL_DIR=/usr/lib/x86_64-linux-gnu/qt5
-          rust: stable
+    # Linux Qt 5 manual
+    - os: linux
+      env: QT_INSTALL_DIR=/usr/lib/x86_64-linux-gnu/qt5
+      rust: stable
 
-        # OSX Qt 5
-        - os: osx
-          rust: stable
+    # OSX Qt 5
+    - os: osx
+      rust: stable
 
-        - os: osx
-          rust: beta
+    - os: osx
+      rust: beta
 
-        - os: osx
-          rust: nightly
+    - os: osx
+      rust: nightly
 
-        # OSX Qt 5 manual
-        - os: osx
-          env: QT_INSTALL_DIR=/usr/local/opt/qt
-          rust: stable
+    # OSX Qt 5 manual
+    - os: osx
+      env: QT_INSTALL_DIR=/usr/local/opt/qt
+      rust: stable
 
-    allow_failures:
-        - rust: nightly
+  allow_failures:
+    - rust: nightly
 
-# Prerequisites
+# Pipeline
 before_install:
-    - bash ci/before_install.sh
+  - bash ci/before_install.sh
 
 script:
-  - cargo build --verbose
-  - cargo test --verbose
+  - bash ci/script.sh
+
+cache: cargo
+before_cache:
+  - chmod -R a+r $HOME/.cargo
 
 # Notifications
 notifications:
-    email:
+  email:
 
 on_success: never
