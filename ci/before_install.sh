@@ -17,11 +17,14 @@ fi
 
 if [[ "$TRAVIS_OS_NAME" == "windows" ]]
 then
-    if [[ ! -d /c/Qt ]]
-    then
-        curl -OL http://download.qt.io/official_releases/qt/5.11/5.11.2/qt-opensource-windows-x86-5.11.2.exe
-        ./qt-opensource-windows-x86-5.11.2.exe --script ci/install.qs
-    fi
-    ls /c/Qt/
-    ls /c/Qt/dist/
+    ls -ltr /
+    ls -ltr /mingw64
+    ls -ltr /cmd
+    # if [[ ! -d /c/Qt ]]
+    # then
+    #     curl -OL http://download.qt.io/official_releases/qt/5.11/5.11.2/qt-opensource-windows-x86-5.11.2.exe
+    #     ./qt-opensource-windows-x86-5.11.2.exe --script ci/install.qs
+    # fi
+    # ls /c/Qt/
+    # ls /c/Qt/dist/
 fi
