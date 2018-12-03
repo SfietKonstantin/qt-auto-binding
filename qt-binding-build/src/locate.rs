@@ -54,7 +54,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::{locate::locate, Version};
+    /// use qt_binding_build::{locate::locate, Version};
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.major_version(), &Version::Qt5);
@@ -67,7 +67,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.version(), "5.11.1");
@@ -85,7 +85,7 @@ impl QtInstall {
     ///
     /// ```no_run
     /// use std::path::Path;
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.bin_dir(), Path::new("/usr/lib/qt5/bin"));
@@ -104,7 +104,7 @@ impl QtInstall {
     ///
     /// ```no_run
     /// use std::path::Path;
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.lib_dir(), Path::new("/usr/lib"));
@@ -123,7 +123,7 @@ impl QtInstall {
     ///
     /// ```no_run
     /// use std::path::Path;
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.include_dir(), Path::new("/usr/include/qt5"));
@@ -142,7 +142,7 @@ impl QtInstall {
     ///
     /// ```no_run
     /// use std::path::Path;
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.moc(), Path::new("/usr/lib/qt5/bin/moc"));
@@ -159,7 +159,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::locate::locate;
+    /// use qt_binding_build::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.lib_name("Core"), "Qt5Core");
@@ -240,7 +240,7 @@ pub(crate) fn lib_file(lib: &str) -> String {
 ///
 /// ```no_run
 /// use cc::Build;
-/// use qt_binding_core::locate::locate;
+/// use qt_binding_build::locate::locate;
 ///
 /// let qt_install = locate().unwrap();
 /// let include_dir = qt_install.include_dir();
