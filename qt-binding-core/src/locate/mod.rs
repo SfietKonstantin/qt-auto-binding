@@ -8,10 +8,7 @@ pub mod errors;
 
 mod qmake;
 
-use self::{
-    errors::{Error, QMakeError, Result},
-    qmake::{invoke, lib_file, MOC_EXEC, QMAKE_EXEC},
-};
+use self::errors::{Error, QMakeError, Result};
 use std::{
     env,
     path::{Path, PathBuf},
@@ -36,6 +33,22 @@ pub struct QtInstall {
 }
 
 impl QtInstall {
+    pub(crate) fn new(
+        major_version: Version,
+        version: String,
+        bin_dir: PathBuf,
+        lib_dir: PathBuf,
+        include_dir: PathBuf,
+    ) -> QtInstall {
+        QtInstall {
+            major_version,
+            version,
+            bin_dir,
+            lib_dir,
+            include_dir,
+        }
+    }
+
     /// Qt major version
     ///
     /// # Examples
@@ -171,6 +184,32 @@ impl QtInstall {
     }
 }
 
+#[cfg(unix)]
+pub(crate) const QMAKE_EXEC: &str = "qmake";
+
+#[cfg(windows)]
+pub(crate) const QMAKE_EXEC: &str = "qmake.exe";
+
+#[cfg(unix)]
+pub(crate) const MOC_EXEC: &str = "moc";
+
+#[cfg(windows)]
+pub(crate) const MOC_EXEC: &str = "moc.exe";
+
+pub(crate) fn lib_file(lib: &str) -> String {
+    if cfg!(unix) {
+        if cfg!(target_os = "macos") {
+            format!("{}.framework", lib)
+        } else {
+            format!("lib{}.so", lib)
+        }
+    } else if cfg!(windows) {
+        format!("{}.lib", lib)
+    } else {
+        panic!("Unsupported OS");
+    }
+}
+
 /// Locate Qt installation
 ///
 /// Qt is a framework that is composed of headers and libraries to link to as well as tools to
@@ -210,7 +249,6 @@ impl QtInstall {
 /// ```no_run
 /// # extern crate qt_binding_core;
 /// # extern crate cc;
-/// # use std::path::Path;
 /// use cc::Build;
 /// use qt_binding_core::locate::locate;
 ///
@@ -249,7 +287,7 @@ impl LocateSpi for LocatorSpi {
     }
 
     fn qmake_query(&self, qmake: &Path) -> StdResult<Vec<u8>, QMakeError> {
-        invoke(&qmake, &["-query"])
+        qmake::query(&qmake)
     }
 
     fn exists(&self, path: &Path) -> bool {
@@ -295,20 +333,18 @@ where
             Ok([qt_install_dir, bin_dir, qmake_exec]
                 .iter()
                 .collect::<PathBuf>())
-        } else {
-            if cfg!(unix) {
-                if cfg!(target_os = "macos") {
-                    Ok(["/usr/local/opt/qt/bin", QMAKE_EXEC]
-                        .iter()
-                        .collect::<PathBuf>())
-                } else {
-                    Ok(PathBuf::from(QMAKE_EXEC))
-                }
-            } else if cfg!(windows) {
-                Err(Error::NoQmake)
+        } else if cfg!(unix) {
+            if cfg!(target_os = "macos") {
+                Ok(["/usr/local/opt/qt/bin", QMAKE_EXEC]
+                    .iter()
+                    .collect::<PathBuf>())
             } else {
-                panic!("Unsupported OS");
+                Ok(PathBuf::from(QMAKE_EXEC))
             }
+        } else if cfg!(windows) {
+            Err(Error::NoQmake)
+        } else {
+            panic!("Unsupported OS");
         }
     }
 
@@ -331,13 +367,13 @@ where
                 })
             }?;
 
-            Ok(QtInstall {
+            Ok(QtInstall::new(
                 major_version,
-                version: version.to_string(),
-                bin_dir: PathBuf::from(bin_dir),
-                lib_dir: PathBuf::from(lib_dir),
-                include_dir: PathBuf::from(include_dir),
-            })
+                version.to_string(),
+                PathBuf::from(bin_dir),
+                PathBuf::from(lib_dir),
+                PathBuf::from(include_dir),
+            ))
         } else {
             Err(Error::QMakeIncorrectInfo {
                 qmake: qmake.to_string_lossy().to_string(),

@@ -1,0 +1,8 @@
+[package]
+name = "test-core-build"
+version = "1.0.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+build = "build.rs"
+
+[build-dependencies]
+qt-binding-core = {path = "../../qt-binding-core"}

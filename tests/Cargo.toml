@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "test-core-locate",
+    "test-core-build",
+]

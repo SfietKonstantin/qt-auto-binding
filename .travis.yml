@@ -58,7 +58,6 @@ before_install:
 script:
   - bash ci/script.sh
 
-cache: cargo
 before_cache:
   - chmod -R a+r $HOME/.cargo
 
@@ -67,7 +66,3 @@ notifications:
   email:
 
 on_success: never
-
-# Cache
-cache:
-  - cargo

@@ -8,19 +8,17 @@ branches:
 environment:
   global:
     CRATE_NAME: qt-binding
+    QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
 
   matrix:
     - TARGET: x86_64-pc-windows-msvc
       RUST_VERSION: stable
-      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
 
     - TARGET: x86_64-pc-windows-msvc
       RUST_VERSION: beta
-      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
 
     - TARGET: x86_64-pc-windows-msvc
       RUST_VERSION: nightly
-      QT_INSTALL_DIR: C:\Qt\5.11\msvc2015_64
 
 # Pipeline
 install:
@@ -35,6 +33,8 @@ build_script:
 
 test_script:
   - cargo test --verbose
+  - set PATH=%QT_INSTALL_DIR%\bin;%PATH%
+  - cd tests && cargo test --verbose
 
 cache:
   - C:\Users\appveyor\.cargo\registry
