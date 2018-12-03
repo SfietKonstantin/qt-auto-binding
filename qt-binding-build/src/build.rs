@@ -61,7 +61,7 @@ impl Version {
 /// [`Builder::from_install`] or depend on a library built via [`Builder::from_install`] and
 /// call [`Builder::from_dep`].
 ///
-/// In general the second way is the preferred one, as `qt-binding-sys` is likely to be built
+/// In general the second way is the preferred one, as `qt-auto-binding` is likely to be built
 ///
 /// To handle transitive dependencies, `Builder` will expose the [`QtInstall`] that have been used
 /// as cargo metadata, so that it can be used for libraries that want to use the [links] feature.
@@ -76,7 +76,7 @@ impl Version {
 /// Build a library based on `locate`:
 ///
 /// ```no_run
-/// use qt_binding_core::{build::Builder, locate::locate};
+/// use qt_binding_build::{build::Builder, locate::locate};
 ///
 /// let qt_install = locate().unwrap();
 ///
@@ -86,12 +86,12 @@ impl Version {
 ///     .build("mylib");
 /// ```
 ///
-/// Build a library with the same Qt installation used to build `qt-binding-sys`:
+/// Build a library with the same Qt installation used to build `qt-binding`:
 ///
 /// ```no_run
-/// use qt_binding_core::build::Builder;
+/// use qt_binding_build::build::Builder;
 ///
-/// Builder::from_dep("qt-binding-sys")
+/// Builder::from_dep("qt-binding")
 ///     .file("binding")
 ///     .build("mylib");
 /// ```
@@ -126,7 +126,7 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::{build::Builder, locate::locate};
+    /// use qt_binding_build::{build::Builder, locate::locate};
     ///
     /// let qt_install = locate().unwrap();
     ///
@@ -171,7 +171,7 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::{build::Builder, locate::locate};
+    /// use qt_binding_build::{build::Builder, locate::locate};
     ///
     /// let qt_install = locate().unwrap();
     ///
@@ -195,9 +195,9 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::build::Builder;
+    /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding-sys")
+    /// let builder = Builder::from_dep("qt-binding")
     ///     .file("first.cpp")
     ///     .file("second.cpp");
     ///
@@ -218,9 +218,9 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::build::Builder;
+    /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding-sys")
+    /// let builder = Builder::from_dep("qt-binding")
     ///     .file("incorrect.cpp")
     ///     .files(&["first.cpp", "second.cpp"]);
     ///
@@ -246,9 +246,9 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::build::Builder;
+    /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding-sys")
+    /// let builder = Builder::from_dep("qt-binding")
     ///     .moc_file("header.hpp")
     ///     .file("source.cpp");
     ///
@@ -270,9 +270,9 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// use qt_binding_core::build::Builder;
+    /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding-sys")
+    /// let builder = Builder::from_dep("qt-binding")
     ///     .moc_file("incorrect.hpp")
     ///     .moc_files(&["header1.hpp", "header2.hpp"])
     ///     .file("source.cpp");
@@ -308,7 +308,7 @@ impl Builder {
     /// The example below is an example of build script to build some C++ source files using Qt.
     ///
     /// ```no_run
-    /// use qt_binding_core::{build::Builder, locate::locate};
+    /// use qt_binding_build::{build::Builder, locate::locate};
     ///
     /// fn main() {
     ///     let qt_install = locate().unwrap();
@@ -339,15 +339,13 @@ impl Builder {
         let lib_dir_str = self.qt_install.lib_dir().to_string_lossy();
         let include_dir_str = include_dir.to_string_lossy();
 
+        let qtcore = self.qt_install.lib_name("Core");
         if cfg!(target_os = "macos") {
             println!("cargo:rustc-link-search=framework={}", lib_dir_str);
-            println!(
-                "cargo:rustc-link-lib=framework={}",
-                self.qt_install.lib_name("Core")
-            );
+            println!("cargo:rustc-link-lib=framework={}", qtcore);
         } else {
             println!("cargo:rustc-link-search=native={}", lib_dir_str);
-            println!("cargo:rustc-link-lib={}", self.qt_install.lib_name("Core"));
+            println!("cargo:rustc-link-lib={}", qtcore);
         }
         println!("cargo:out_dir={}", out_dir_str);
         println!("cargo:qt_major_version={}", major_version);
