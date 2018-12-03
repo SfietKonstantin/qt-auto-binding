@@ -1,4 +1,4 @@
-use qt_binding_core::{build::Builder, locate::locate, Version};
+use qt_binding_build::{build::Builder, locate::locate, Version};
 
 fn main() {
     let qt_install = locate().unwrap();
