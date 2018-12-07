@@ -6,13 +6,12 @@
 
 mod moc;
 
+use crate::{locate::QtInstall, Version};
 use cc::Build;
-use locate::QtInstall;
 use std::{
     env,
     path::{Path, PathBuf},
 };
-use Version;
 
 /// Provides the build directory used for build scripts
 ///
@@ -77,7 +76,6 @@ impl Version {
 /// Build a library based on `locate`:
 ///
 /// ```no_run
-/// # extern crate qt_binding_core;
 /// use qt_binding_core::{build::Builder, locate::locate};
 ///
 /// let qt_install = locate().unwrap();
@@ -91,7 +89,6 @@ impl Version {
 /// Build a library with the same Qt installation used to build `qt-binding-sys`:
 ///
 /// ```no_run
-/// # extern crate qt_binding_core;
 /// use qt_binding_core::build::Builder;
 ///
 /// Builder::from_dep("qt-binding-sys")
@@ -129,7 +126,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::{build::Builder, locate::locate};
     ///
     /// let qt_install = locate().unwrap();
@@ -175,7 +171,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::{build::Builder, locate::locate};
     ///
     /// let qt_install = locate().unwrap();
@@ -200,7 +195,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::build::Builder;
     ///
     /// let builder = Builder::from_dep("qt-binding-sys")
@@ -224,7 +218,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::build::Builder;
     ///
     /// let builder = Builder::from_dep("qt-binding-sys")
@@ -253,7 +246,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::build::Builder;
     ///
     /// let builder = Builder::from_dep("qt-binding-sys")
@@ -278,7 +270,6 @@ impl Builder {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::build::Builder;
     ///
     /// let builder = Builder::from_dep("qt-binding-sys")
@@ -317,7 +308,6 @@ impl Builder {
     /// The example below is an example of build script to build some C++ source files using Qt.
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::{build::Builder, locate::locate};
     ///
     /// fn main() {
@@ -351,7 +341,10 @@ impl Builder {
 
         if cfg!(target_os = "macos") {
             println!("cargo:rustc-link-search=framework={}", lib_dir_str);
-            println!("cargo:rustc-link-lib=framework={}", self.qt_install.lib_name("Core"));
+            println!(
+                "cargo:rustc-link-lib=framework={}",
+                self.qt_install.lib_name("Core")
+            );
         } else {
             println!("cargo:rustc-link-search=native={}", lib_dir_str);
             println!("cargo:rustc-link-lib={}", self.qt_install.lib_name("Core"));
@@ -364,7 +357,8 @@ impl Builder {
         println!("cargo:qt_include_dir={}", include_dir_str);
 
         let mut builder = Build::new();
-        builder.cpp(true)
+        builder
+            .cpp(true)
             .files(files)
             .include(out_dir)
             .include(include_dir);

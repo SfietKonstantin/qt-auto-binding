@@ -106,10 +106,7 @@ pub enum Error {
     ///
     /// This error happens when the Qt installation found by `qmake` is missing
     /// some components used by `qt_binding`.
-    #[fail(
-        display = "Qt installation is incomplete. Missing {}",
-        missing
-    )]
+    #[fail(display = "Qt installation is incomplete. Missing {}", missing)]
     IncompleteQtInstall {
         /// Path to the missing component
         missing: String,

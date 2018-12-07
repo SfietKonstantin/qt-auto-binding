@@ -1,5 +1,3 @@
-extern crate qt_binding_core;
-
 use qt_binding_core::{build::Builder, locate::locate, Version};
 
 fn main() {

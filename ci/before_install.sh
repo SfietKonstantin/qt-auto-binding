@@ -12,5 +12,4 @@ fi
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]
 then
     brew install qt
-    ls /usr/local/Cellar/qt/5.11.2_1/lib
 fi

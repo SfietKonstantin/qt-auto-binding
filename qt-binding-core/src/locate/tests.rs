@@ -3,7 +3,7 @@ mod unix;
 #[cfg(windows)]
 mod windows;
 
-use locate::{
+use crate::locate::{
     errors::{Error, QMakeError},
     LocateSpi, Locator, QtInfo,
 };
@@ -115,7 +115,7 @@ fn test_read_prefixed_value() {
 fn test_locate_fails_for_incorrect_qt_version() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("res/query_qt3_test.in")),
+        |_| Ok(include_str!("tests/res/query_qt3_test.in")),
     );
 
     let locator = Locator::new(spi);
@@ -127,7 +127,7 @@ fn test_locate_fails_for_incorrect_qt_version() {
 fn test_locate_fails_for_missing_version() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("res/query_qt_no_version.in")),
+        |_| Ok(include_str!("tests/res/query_qt_no_version.in")),
     );
 
     let locator = Locator::new(spi);
@@ -139,7 +139,7 @@ fn test_locate_fails_for_missing_version() {
 fn test_locate_fails_for_missing_lib() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("res/query_qt_no_lib.in")),
+        |_| Ok(include_str!("tests/res/query_qt_no_lib.in")),
     );
 
     let locator = Locator::new(spi);
@@ -151,7 +151,7 @@ fn test_locate_fails_for_missing_lib() {
 fn test_locate_fails_for_missing_bin() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("res/query_qt_no_bin.in")),
+        |_| Ok(include_str!("tests/res/query_qt_no_bin.in")),
     );
 
     let locator = Locator::new(spi);
@@ -163,7 +163,7 @@ fn test_locate_fails_for_missing_bin() {
 fn test_locate_fails_for_missing_include() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("res/query_qt_no_include.in")),
+        |_| Ok(include_str!("tests/res/query_qt_no_include.in")),
     );
 
     let locator = Locator::new(spi);
