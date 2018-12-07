@@ -1,20 +1,11 @@
 #![warn(missing_docs)]
 
-//! Support library for Qt bindings
+//! Build Qt bindings
 //!
-//! This library is used by `qt-binding-build` and `qt-binding-derive`.
-//! You should not use it directly.
-//!
-//! # Content
-//!
-//! This library provides
-//! - A way to locate Qt in [`locate`] module
-//! - A way to build ...
-//!
-//! [`locate`]: locate/index.html
+//! This library provides a way to locate a Qt installation and use it to build a Qt project, that
+//! can then be used as bindings in Rust code.
 
 pub mod build;
-pub mod errors;
 pub mod locate;
 
 /// Qt major version

@@ -4,9 +4,7 @@ fn main() {
     let qt_install = locate().unwrap();
 
     match qt_install.major_version() {
-        Version::Qt4 => {
-            println!("cargo:rustc-cfg=qt4")
-        },
+        Version::Qt4 => println!("cargo:rustc-cfg=qt4"),
         Version::Qt5 => {
             println!("cargo:rustc-cfg=qt5");
 

@@ -1,0 +1,8 @@
+[package]
+name = "qt-auto-binding"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+
+[build-dependencies]
+qt-binding-build = {path = "../qt-binding-build"}
+

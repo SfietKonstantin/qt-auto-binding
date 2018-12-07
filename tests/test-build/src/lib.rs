@@ -15,25 +15,17 @@ pub mod qt5 {
 
     impl Object {
         pub fn new() -> Self {
-            let object = unsafe {
-                new_object()
-            };
+            let object = unsafe { new_object() };
 
-            Object {
-                object
-            }
+            Object { object }
         }
 
         pub fn value(&self) -> i32 {
-            unsafe {
-                object_value(self.object)
-            }
+            unsafe { object_value(self.object) }
         }
 
         pub fn set_value(&mut self, value: i32) {
-            unsafe {
-                set_object_value(self.object, value)
-            }
+            unsafe { set_object_value(self.object, value) }
         }
     }
 
@@ -45,9 +37,7 @@ pub mod qt5 {
 
     impl Drop for Object {
         fn drop(&mut self) {
-            unsafe {
-                delete_object(self.object)
-            }
+            unsafe { delete_object(self.object) }
         }
     }
 

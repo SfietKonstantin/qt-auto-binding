@@ -2,4 +2,8 @@
 
 members = [
     "qt-binding-build",
+    "qt-auto-binding",
+    "qt-auto-binding-core",
+    "qt-auto-binding-build",
+    "qt-auto-binding-macros",
 ]

@@ -1,0 +1,10 @@
+[package]
+name = "qt-auto-binding-build"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+
+[dependencies]
+qt-binding-build = {path = "../qt-binding-build"}
+qt-auto-binding-core = {path = "../qt-auto-binding-core"}
+syn = {version = "0.15", features = ["full", "visit", "extra-traits"]}
+failure = "0.1"
