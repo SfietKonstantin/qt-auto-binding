@@ -4,7 +4,7 @@ mod linux;
 #[cfg(target_os = "macos")]
 mod macos;
 
-use locate::{tests::LocatorTestSpi, Locator, QtInfo};
+use crate::locate::{tests::LocatorTestSpi, Locator, QtInfo};
 use std::path::Path;
 
 #[test]
@@ -21,7 +21,7 @@ fn test_locate_qt5_use_install_dir() {
         || Some("/my/qt/install"),
         |qmake| {
             assert_eq!(qmake, Path::new("/my/qt/install/bin/qmake"));
-            Ok(include_str!("../res/query_qt5_test.in"))
+            Ok(include_str!("res/query_qt5_test.in"))
         },
     );
 
@@ -33,8 +33,9 @@ fn test_locate_qt5_use_install_dir() {
 fn test_locate_fails_if_moc_is_not_present() {
     let spi = LocatorTestSpi::new(
         || None, //
-        |_| Ok(include_str!("../res/query_qt5_test.in")),
-    ).add_missing("/my/bin/moc");
+        |_| Ok(include_str!("res/query_qt5_test.in")),
+    )
+    .add_missing("/my/bin/moc");
 
     let locator = Locator::new(spi);
     let err = locator.locate().err().unwrap();

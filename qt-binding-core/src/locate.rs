@@ -9,12 +9,12 @@ pub mod errors;
 mod qmake;
 
 use self::errors::{Error, QMakeError, Result};
+use crate::Version;
 use std::{
     env,
     path::{Path, PathBuf},
     result::Result as StdResult,
 };
-use Version;
 
 /// Qt installation
 ///
@@ -54,7 +54,6 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::{locate::locate, Version};
     ///
     /// let qt_install = locate().unwrap();
@@ -68,8 +67,6 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
-    /// # use std::path::Path;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -87,8 +84,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
-    /// # use std::path::Path;
+    /// use std::path::Path;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -107,8 +103,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
-    /// # use std::path::Path;
+    /// use std::path::Path;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -127,8 +122,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
-    /// # use std::path::Path;
+    /// use std::path::Path;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -147,8 +141,7 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
-    /// # use std::path::Path;
+    /// use std::path::Path;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -166,7 +159,6 @@ impl QtInstall {
     /// # Examples
     ///
     /// ```no_run
-    /// # extern crate qt_binding_core;
     /// use qt_binding_core::locate::locate;
     ///
     /// let qt_install = locate().unwrap();
@@ -247,8 +239,6 @@ pub(crate) fn lib_file(lib: &str) -> String {
 /// # Examples
 ///
 /// ```no_run
-/// # extern crate qt_binding_core;
-/// # extern crate cc;
 /// use cc::Build;
 /// use qt_binding_core::locate::locate;
 ///

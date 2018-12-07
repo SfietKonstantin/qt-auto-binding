@@ -2,6 +2,7 @@
 name = "test-core-build"
 version = "1.0.0"
 authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
 build = "build.rs"
 
 [build-dependencies]

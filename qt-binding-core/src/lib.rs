@@ -13,9 +13,6 @@
 //!
 //! [`locate`]: locate/index.html
 
-extern crate cc;
-extern crate failure;
-
 pub mod build;
 pub mod errors;
 pub mod locate;

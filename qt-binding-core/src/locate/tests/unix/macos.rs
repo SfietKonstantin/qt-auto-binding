@@ -1,6 +1,8 @@
-use locate::{tests::LocatorTestSpi, Locator};
+use crate::{
+    locate::{tests::LocatorTestSpi, Locator},
+    Version,
+};
 use std::path::Path;
-use Version;
 
 #[test]
 fn test_locate_qt5_with_qmake_in_path() {
@@ -29,7 +31,8 @@ fn test_locate_fails_if_qtcore_is_not_present() {
     let spi = LocatorTestSpi::new(
         || None, //
         |_| Ok(include_str!("../res/query_qt5_test.in")),
-    ).add_missing("/my/lib/QtCore.framework");
+    )
+    .add_missing("/my/lib/QtCore.framework");
 
     let locator = Locator::new(spi);
     let err = locator.locate().err().unwrap();

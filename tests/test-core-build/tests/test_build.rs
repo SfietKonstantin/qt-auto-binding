@@ -1,5 +1,3 @@
-extern crate test_core_build;
-
 #[cfg(qt5)]
 use test_core_build::qt5::Object;
 

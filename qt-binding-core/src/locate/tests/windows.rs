@@ -1,4 +1,4 @@
-use locate::{tests::LocatorTestSpi, Locator, QtInfo};
+use crate::locate::{tests::LocatorTestSpi, Locator, QtInfo};
 use std::path::Path;
 
 #[test]
@@ -40,7 +40,8 @@ fn test_locate_fails_if_moc_is_not_present() {
     let spi = LocatorTestSpi::new(
         || Some("c:\\my\\qt\\install"),
         |_| Ok(include_str!("res/query_qt5_test_win.in")),
-    ).add_missing("c:\\my\\bin\\moc.exe");
+    )
+    .add_missing("c:\\my\\bin\\moc.exe");
 
     let locator = Locator::new(spi);
     let err = locator.locate().err().unwrap();
@@ -52,7 +53,8 @@ fn test_locate_fails_if_qtcore_is_not_present() {
     let spi = LocatorTestSpi::new(
         || Some("c:\\my\\qt\\install"),
         |_| Ok(include_str!("res/query_qt5_test_win.in")),
-    ).add_missing("c:\\my\\lib\\Qt5Core.lib");
+    )
+    .add_missing("c:\\my\\lib\\Qt5Core.lib");
 
     let locator = Locator::new(spi);
     let err = locator.locate().err().unwrap();
