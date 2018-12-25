@@ -27,25 +27,6 @@ fn test_locate_qt5_with_qmake_in_path() {
 }
 
 #[test]
-fn test_locate_qt4() {
-    let spi = LocatorTestSpi::new(
-        || None, //
-        |_| Ok(include_str!("../res/query_qt4.8.7.in")),
-    );
-
-    let locator = Locator::new(spi);
-    let qt_install = locator.locate().unwrap();
-
-    assert_eq!(qt_install.major_version(), &Version::Qt4);
-    assert_eq!(qt_install.version(), "4.8.7");
-    assert_eq!(qt_install.bin_dir(), Path::new("/usr/lib64/qt4/bin"));
-    assert_eq!(qt_install.lib_dir(), Path::new("/usr/lib64"));
-    assert_eq!(qt_install.include_dir(), Path::new("/usr/include"));
-    assert_eq!(qt_install.moc(), Path::new("/usr/lib64/qt4/bin/moc"));
-    assert_eq!(qt_install.lib_name("Core"), "QtCore");
-}
-
-#[test]
 fn test_locate_fails_if_qtcore_is_not_present() {
     let spi = LocatorTestSpi::new(
         || None, //

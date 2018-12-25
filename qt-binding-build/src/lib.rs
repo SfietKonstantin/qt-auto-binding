@@ -21,8 +21,6 @@ pub mod locate;
 /// This enumeration contains Qt major versions supported by `qt_binding`.
 #[derive(Debug, Eq, PartialEq)]
 pub enum Version {
-    /// Qt 4
-    Qt4,
     /// Qt 5
     Qt5,
 }

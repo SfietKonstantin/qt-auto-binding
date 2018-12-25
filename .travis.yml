@@ -23,11 +23,6 @@ matrix:
       env: QT_SELECT=5
       rust: nightly
 
-    # Linux Qt 4
-    - os: linux
-      env: QT_SELECT=4
-      rust: stable
-
     # Linux Qt 5 manual
     - os: linux
       env: QT_INSTALL_DIR=/usr/lib/x86_64-linux-gnu/qt5
