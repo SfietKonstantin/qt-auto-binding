@@ -6,4 +6,4 @@ edition = "2018"
 build = "build.rs"
 
 [build-dependencies]
-qt-binding-build = {path = "../../qt-binding-build"}
+qt-binding-build = {path = "../../qt-binding-build", features = ["qml"]}

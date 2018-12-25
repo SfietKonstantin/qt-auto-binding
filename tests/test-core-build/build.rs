@@ -8,6 +8,7 @@ fn main() {
             println!("cargo:rustc-cfg=qt5");
 
             Builder::from_install(qt_install)
+                .res_file("src/res.qrc")
                 .moc_file("src/object.h")
                 .files(&["src/bindings.cpp", "src/object.cpp"])
                 .build("bindings");

@@ -30,6 +30,8 @@ pub struct QtInstall {
     bin_dir: PathBuf,
     lib_dir: PathBuf,
     include_dir: PathBuf,
+    moc: PathBuf,
+    rcc: PathBuf,
 }
 
 impl QtInstall {
@@ -40,12 +42,17 @@ impl QtInstall {
         lib_dir: PathBuf,
         include_dir: PathBuf,
     ) -> QtInstall {
+        let moc = bin_dir.join(MOC_EXEC);
+        let rcc = bin_dir.join(RCC_EXEC);
+
         QtInstall {
             major_version,
             version,
             bin_dir,
             lib_dir,
             include_dir,
+            moc,
+            rcc,
         }
     }
 
@@ -147,8 +154,27 @@ impl QtInstall {
     /// let qt_install = locate().unwrap();
     /// assert_eq!(qt_install.moc(), Path::new("/usr/lib/qt5/bin/moc"));
     /// ```
-    pub fn moc(&self) -> PathBuf {
-        Path::new(&self.bin_dir).join(MOC_EXEC)
+    pub fn moc(&self) -> &Path {
+        &self.moc
+    }
+
+    /// Path to `rcc`
+    ///
+    /// Returns path to Qt's rcc tool as a [`Path`].
+    ///
+    /// [`Path`]: https://doc.rust-lang.org/nightly/std/path/struct.Path.html
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use std::path::Path;
+    /// use qt_binding_build::locate::locate;
+    ///
+    /// let qt_install = locate().unwrap();
+    /// assert_eq!(qt_install.rcc(), Path::new("/usr/lib/qt5/bin/rcc"));
+    /// ```
+    pub fn rcc(&self) -> &Path {
+        &self.rcc
     }
 
     /// Qt module library name
@@ -186,6 +212,12 @@ pub(crate) const MOC_EXEC: &str = "moc";
 
 #[cfg(windows)]
 pub(crate) const MOC_EXEC: &str = "moc.exe";
+
+#[cfg(unix)]
+pub(crate) const RCC_EXEC: &str = "rcc";
+
+#[cfg(windows)]
+pub(crate) const RCC_EXEC: &str = "rcc.exe";
 
 pub(crate) fn lib_file(lib: &str) -> String {
     if cfg!(unix) {
@@ -369,23 +401,38 @@ where
     }
 
     fn check_qt_install(&self, qt_install: &QtInstall) -> Result<()> {
-        let moc = qt_install.moc();
-        let qtcore_path = Locator::<Spi>::qtcore_lib_path(qt_install);
-        if !self.spi.exists(&moc) {
+        self.check_path(qt_install.moc())?;
+        self.check_path(qt_install.rcc())?;
+        self.check_lib(qt_install, "Core")?;
+
+        if cfg!(feature = "qml") {
+            self.check_lib(qt_install, "Qml")?;
+        }
+
+        if cfg!(feature = "quick") {
+            self.check_lib(qt_install, "Quick")?;
+        }
+
+        Ok(())
+    }
+
+    fn check_lib(&self, qt_install: &QtInstall, module: &str) -> Result<()> {
+        let path = Locator::<Spi>::lib_path(qt_install, module);
+        self.check_path(&path)
+    }
+
+    fn check_path(&self, path: &Path) -> Result<()> {
+        if !self.spi.exists(&path) {
             Err(Error::IncompleteQtInstall {
-                missing: moc.to_string_lossy().to_string(),
-            })
-        } else if !self.spi.exists(&qtcore_path) {
-            Err(Error::IncompleteQtInstall {
-                missing: qtcore_path.to_string_lossy().to_string(),
+                missing: path.to_string_lossy().to_string(),
             })
         } else {
             Ok(())
         }
     }
 
-    fn qtcore_lib_path(qt_install: &QtInstall) -> PathBuf {
-        let name = qt_install.lib_name("Core");
+    fn lib_path(qt_install: &QtInstall, lib: &str) -> PathBuf {
+        let name = qt_install.lib_name(lib);
         let lib_dir = &qt_install.lib_dir;
 
         let lib = lib_file(&name);
