@@ -1,5 +1,5 @@
 #[cfg(qt5)]
-use test_core_build::qt5::Object;
+use test_core_build::qt5::{Object, TestApp};
 
 #[test]
 #[cfg(qt5)]
@@ -11,4 +11,10 @@ fn test_set_value() {
     object.set_value(12345);
 
     assert_eq!(object.value(), 12345);
+}
+
+#[test]
+#[cfg(qt5)]
+fn test_run_app() {
+    TestApp::run();
 }

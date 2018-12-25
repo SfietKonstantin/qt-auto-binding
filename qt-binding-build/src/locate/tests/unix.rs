@@ -41,3 +41,16 @@ fn test_locate_fails_if_moc_is_not_present() {
     let err = locator.locate().err().unwrap();
     assert!(err.is_incomplete_qt_install());
 }
+
+#[test]
+fn test_locate_fails_if_rcc_is_not_present() {
+    let spi = LocatorTestSpi::new(
+        || None, //
+        |_| Ok(include_str!("res/query_qt5_test.in")),
+    )
+    .add_missing("/my/bin/rcc");
+
+    let locator = Locator::new(spi);
+    let err = locator.locate().err().unwrap();
+    assert!(err.is_incomplete_qt_install());
+}

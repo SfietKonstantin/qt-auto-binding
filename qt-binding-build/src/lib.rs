@@ -9,6 +9,14 @@
 //! This library is used by `qt-auto-binding` and it's support libraries `qt-auto-binding-build`
 //! and `qt-auto-binding-macros`.
 //!
+//! # Features
+//!
+//! By default `qt-binding-build` will only link against `QtCore`. Linking against additional
+//! libraries is controlled by features:
+//!
+//! - `qml` enables linking against `QtQml`
+//! - `quick` enables linking against `QtQuick`
+//!
 //! [`locate`]: locate/index.html
 //! [`build`]: build/index.html
 

@@ -4,8 +4,9 @@
 //!
 //! [`Builder`]: struct.Builder.html
 
-mod moc;
+mod tool;
 
+use self::tool::Tool;
 use crate::{locate::QtInstall, Version};
 use cc::Build;
 use std::{
@@ -99,6 +100,7 @@ pub struct Builder {
     qt_install: QtInstall,
     files: Vec<PathBuf>,
     moc_files: Vec<PathBuf>,
+    res_files: Vec<PathBuf>,
 }
 
 impl Builder {
@@ -107,8 +109,9 @@ impl Builder {
     /// This function will create an empty `Builder` that will use Qt information exposed by
     /// [`Builder::from_install`] in a dependant crate via the build scripts [links].
     ///
-    /// Use [`file`] or [`files`] to supply files to be built and [`moc_file`] or [`moc_files`]
-    /// to supply headers that requires `moc`.
+    /// Use [`file`] or [`files`] to supply files to be built, [`moc_file`] or [`moc_files`]
+    /// to supply headers that requires `moc` and [`res_file`] or [`res_files`] to generate source
+    /// from Qt resource files.
     ///
     /// Use [`build`] to build the project.
     ///
@@ -118,6 +121,8 @@ impl Builder {
     /// [`files`]: #method.files
     /// [`moc_file`]: #method.moc_file
     /// [`moc_files`]: #method.moc_files
+    /// [`res_file`]: #method.res_file
+    /// [`res_files`]: #method.res_files
     /// [`build`]: #method.build
     ///
     /// # Examples
@@ -130,6 +135,7 @@ impl Builder {
     /// Builder::from_install(qt_install)
     ///     .files(&["source.cpp", "object.cpp"])
     ///     .moc_file("object.h")
+    ///     .res_file("res.qrc")
     ///     .build("mylib");
     /// ```
     pub fn from_dep(dep: &str) -> Self {
@@ -156,8 +162,9 @@ impl Builder {
     /// It will expose this information as cargo metadata so that depending crate can use
     /// [`Builder::from_dep`] to reuse the same information to build other bindings.
     ///
-    /// Use [`file`] or [`files`] to supply files to be built and [`moc_file`] or [`moc_files`]
-    /// to supply headers that requires `moc`.
+    /// Use [`file`] or [`files`] to supply files to be built, [`moc_file`] or [`moc_files`]
+    /// to supply headers that requires `moc` and [`res_file`] or [`res_files`] to generate source
+    /// from Qt resource files.
     ///
     /// Use [`build`] to build the project.
     ///
@@ -166,8 +173,10 @@ impl Builder {
     /// [`files`]: #method.files
     /// [`moc_file`]: #method.moc_file
     /// [`moc_files`]: #method.moc_files
+    /// [`res_file`]: #method.res_file
+    /// [`res_files`]: #method.res_files
     /// [`build`]: #method.build
-    ///
+
     /// # Examples
     ///
     /// ```no_run
@@ -178,6 +187,7 @@ impl Builder {
     /// Builder::from_install(qt_install)
     ///     .files(&["source.cpp", "object.cpp"])
     ///     .moc_file("object.h")
+    ///     .res_file("res.qrc")
     ///     .build("mylib");
     /// ```
     pub fn from_install(qt_install: QtInstall) -> Self {
@@ -185,6 +195,7 @@ impl Builder {
             qt_install,
             files: Vec::new(),
             moc_files: Vec::new(),
+            res_files: Vec::new(),
         }
     }
 
@@ -291,6 +302,59 @@ impl Builder {
         self
     }
 
+    /// Add a resource file
+    ///
+    /// Generated files will automatically be included in the list of source files
+    /// to be compiled.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use qt_binding_build::build::Builder;
+    ///
+    /// let builder = Builder::from_dep("qt-auto-binding")
+    ///     .res_file("res.qrc")
+    ///     .file("source.cpp");
+    ///
+    /// // builder now contains ["rcc_res.cpp", "source.cpp"]
+    /// ```
+    pub fn res_file<P>(mut self, path: P) -> Self
+    where
+        P: AsRef<Path>,
+    {
+        self.res_files.push(path.as_ref().to_path_buf());
+        self
+    }
+
+    /// Set resource files
+    ///
+    /// Generated files will automatically be included in the list of source files
+    /// to be compiled.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use qt_binding_build::build::Builder;
+    ///
+    /// let builder = Builder::from_dep("qt-auto-binding")
+    ///     .res_file("incorrect.qrc")
+    ///     .res_files(&["res1.qrc", "res2.qrc"])
+    ///     .file("source.cpp");
+    ///
+    /// // builder now contains ["rcc_res1.cpp", "rcc_res2.cpp", "source.cpp"]
+    /// ```
+    pub fn res_files<P>(mut self, paths: P) -> Self
+    where
+        P: IntoIterator,
+        P::Item: AsRef<Path>,
+    {
+        self.res_files = paths
+            .into_iter()
+            .map(|path| path.as_ref().to_path_buf())
+            .collect();
+        self
+    }
+
     /// Build a project
     ///
     /// The project will be built as a static library with the supplied name.
@@ -322,14 +386,25 @@ impl Builder {
     pub fn build(&self, name: &str) {
         let out_dir = build_dir();
 
-        let moc = self.qt_install.moc();
+        let moc = Tool::moc(self.qt_install.moc());
         let moc_files = &self.moc_files;
-        let outputs = moc_files
+        let moc_outputs = moc_files
             .iter()
-            .map(|input| out_dir.join(moc::exec(&moc, &out_dir, input)))
+            .map(|input| out_dir.join(moc.exec(&out_dir, input)))
             .collect::<Vec<_>>();
 
-        let files = self.files.iter().chain(outputs.iter());
+        let rcc = Tool::rcc(self.qt_install.rcc(), name);
+        let res_files = &self.res_files;
+        let res_outputs = res_files
+            .iter()
+            .map(|input| out_dir.join(rcc.exec(&out_dir, input)))
+            .collect::<Vec<_>>();
+
+        let files = self
+            .files
+            .iter()
+            .chain(moc_outputs.iter())
+            .chain(res_outputs.iter());
 
         let include_dir = self.qt_install.include_dir();
 
@@ -339,14 +414,6 @@ impl Builder {
         let lib_dir_str = self.qt_install.lib_dir().to_string_lossy();
         let include_dir_str = include_dir.to_string_lossy();
 
-        let qtcore = self.qt_install.lib_name("Core");
-        if cfg!(target_os = "macos") {
-            println!("cargo:rustc-link-search=framework={}", lib_dir_str);
-            println!("cargo:rustc-link-lib=framework={}", qtcore);
-        } else {
-            println!("cargo:rustc-link-search=native={}", lib_dir_str);
-            println!("cargo:rustc-link-lib={}", qtcore);
-        }
         println!("cargo:out_dir={}", out_dir_str);
         println!("cargo:qt_major_version={}", major_version);
         println!("cargo:qt_version={}", self.qt_install.version());
@@ -367,6 +434,21 @@ impl Builder {
         }
 
         builder.compile(name);
+
+        // Link against Qt
+        if cfg!(target_os = "macos") {
+            println!("cargo:rustc-link-search=framework={}", lib_dir_str);
+        } else {
+            println!("cargo:rustc-link-search=native={}", lib_dir_str);
+        }
+        self.link_lib("Core");
+        if cfg!(feature = "qml") {
+            self.link_lib("Qml");
+        }
+
+        if cfg!(feature = "quick") {
+            self.link_lib("Quick");
+        }
     }
 
     fn sys_qt_install_info(dep: &str, key: &str) -> String {
@@ -378,5 +460,14 @@ impl Builder {
                     dep
                 )
             })
+    }
+
+    fn link_lib(&self, module: &str) {
+        let lib = self.qt_install.lib_name(module);
+        if cfg!(target_os = "macos") {
+            println!("cargo:rustc-link-lib=framework={}", lib);
+        } else {
+            println!("cargo:rustc-link-lib={}", lib);
+        }
     }
 }
