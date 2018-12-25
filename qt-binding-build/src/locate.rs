@@ -169,7 +169,6 @@ impl QtInstall {
             format!("Qt{}", module)
         } else {
             match self.major_version {
-                Version::Qt4 => format!("Qt{}", module),
                 Version::Qt5 => format!("Qt5{}", module),
             }
         }
@@ -347,9 +346,7 @@ where
         let infos = (version, bin_dir, lib_dir, include_dir);
 
         if let (Some(version), Some(bin_dir), Some(lib_dir), Some(include_dir)) = infos {
-            let major_version = if version.starts_with('4') {
-                Ok(Version::Qt4)
-            } else if version.starts_with('5') {
+            let major_version = if version.starts_with('5') {
                 Ok(Version::Qt5)
             } else {
                 Err(Error::UnsupportedQt {

@@ -31,14 +31,12 @@ pub fn build_dir() -> PathBuf {
 impl Version {
     fn to_string(&self) -> &str {
         match self {
-            Version::Qt4 => "4",
             Version::Qt5 => "5",
         }
     }
 
     fn from_str(version: &str) -> Self {
         match version {
-            "4" => Version::Qt4,
             "5" => Version::Qt5,
             _ => panic!("Unsupported version {}", version),
         }

@@ -115,7 +115,7 @@ fn test_read_prefixed_value() {
 fn test_locate_fails_for_incorrect_qt_version() {
     let spi = LocatorTestSpi::new(
         || Some("/my/qt/install"),
-        |_| Ok(include_str!("tests/res/query_qt3_test.in")),
+        |_| Ok(include_str!("tests/res/query_qt4.8.7.in")),
     );
 
     let locator = Locator::new(spi);
