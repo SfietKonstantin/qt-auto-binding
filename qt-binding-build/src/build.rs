@@ -58,13 +58,15 @@ impl Version {
 /// # Suppling Qt installation
 ///
 /// There are two ways to provide a Qt installation to `Builder`: either pass a [`QtInstall`] to
-/// [`Builder::from_install`] or depend on a library built via [`Builder::from_install`] and
-/// call [`Builder::from_dep`].
+/// [`Builder::from_install`] or retrieve it from a dependent crate with [`Builder::from_dep`].
 ///
-/// In general the second way is the preferred one, as `qt-auto-binding` is likely to be built
+/// To avoid using conflicting Qt versions, `Builder` always exposes the [`QtInstall`] that have
+/// been used as cargo metadata, so that it can be used in dependent crate via build script
+/// [links].
 ///
-/// To handle transitive dependencies, `Builder` will expose the [`QtInstall`] that have been used
-/// as cargo metadata, so that it can be used for libraries that want to use the [links] feature.
+/// In general, when using `qt-binding-build`, a Qt installation might have already been located
+/// (eg by `qt-auto-binding`). In order to use the same Qt installation, it is recommended to
+/// retrieve it from this dependent crate, using [`Builder::from_dep`].
 ///
 /// [`QtInstall`]: ../locate/struct.QtInstall.html
 /// [`Builder::from_install`]: #method.from_install
@@ -86,12 +88,12 @@ impl Version {
 ///     .build("mylib");
 /// ```
 ///
-/// Build a library with the same Qt installation used to build `qt-binding`:
+/// Build a library with the same Qt installation used to build `qt-auto-binding`:
 ///
 /// ```no_run
 /// use qt_binding_build::build::Builder;
 ///
-/// Builder::from_dep("qt-binding")
+/// Builder::from_dep("qt-auto-binding")
 ///     .file("binding")
 ///     .build("mylib");
 /// ```
@@ -104,19 +106,16 @@ pub struct Builder {
 impl Builder {
     /// Creates a new `Builder` from a Qt installation used to build a dependency
     ///
-    /// Rust libraries can expose information about their native dependencies if the native
-    /// dependency is defined in the `links` section of their `Cargo.toml`. See [build script]
-    /// documentation for more information.
-    ///
-    /// This function will create an empty `Builder` that will use this information to read the
-    /// Qt installation that was used to build the dependent library.
+    /// This function will create an empty `Builder` that will use Qt information exposed by
+    /// [`Builder::from_install`] in a dependant crate via the build scripts [links].
     ///
     /// Use [`file`] or [`files`] to supply files to be built and [`moc_file`] or [`moc_files`]
     /// to supply headers that requires `moc`.
     ///
     /// Use [`build`] to build the project.
     ///
-    /// [build script]: https://doc.rust-lang.org/cargo/reference/build-scripts.html#the-links-manifest-key
+    /// [`Builder::from_install`]: #method.from_install
+    /// [links]: https://doc.rust-lang.org/cargo/reference/build-scripts.html#the-links-manifest-key
     /// [`file`]: #method.file
     /// [`files`]: #method.files
     /// [`moc_file`]: #method.moc_file
@@ -156,12 +155,15 @@ impl Builder {
     /// Creates a new `Builder` from a Qt installation
     ///
     /// This function will create an empty `Builder` that will use the supplied Qt installation.
+    /// It will expose this information as cargo metadata so that depending crate can use
+    /// [`Builder::from_dep`] to reuse the same information to build other bindings.
     ///
     /// Use [`file`] or [`files`] to supply files to be built and [`moc_file`] or [`moc_files`]
     /// to supply headers that requires `moc`.
     ///
     /// Use [`build`] to build the project.
     ///
+    /// [`Builder::from_dep`]: #method.from_dep
     /// [`file`]: #method.file
     /// [`files`]: #method.files
     /// [`moc_file`]: #method.moc_file
@@ -197,7 +199,7 @@ impl Builder {
     /// ```no_run
     /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding")
+    /// let builder = Builder::from_dep("qt-auto-binding")
     ///     .file("first.cpp")
     ///     .file("second.cpp");
     ///
@@ -220,7 +222,7 @@ impl Builder {
     /// ```no_run
     /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding")
+    /// let builder = Builder::from_dep("qt-auto-binding")
     ///     .file("incorrect.cpp")
     ///     .files(&["first.cpp", "second.cpp"]);
     ///
@@ -248,7 +250,7 @@ impl Builder {
     /// ```no_run
     /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding")
+    /// let builder = Builder::from_dep("qt-auto-binding")
     ///     .moc_file("header.hpp")
     ///     .file("source.cpp");
     ///
@@ -272,7 +274,7 @@ impl Builder {
     /// ```no_run
     /// use qt_binding_build::build::Builder;
     ///
-    /// let builder = Builder::from_dep("qt-binding")
+    /// let builder = Builder::from_dep("qt-auto-binding")
     ///     .moc_file("incorrect.hpp")
     ///     .moc_files(&["header1.hpp", "header2.hpp"])
     ///     .file("source.cpp");

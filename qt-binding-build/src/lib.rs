@@ -2,16 +2,15 @@
 
 //! Support library for Qt bindings
 //!
-//! This library is used by `qt-binding-build` and `qt-binding-derive`.
-//! You should not use it directly.
+//! This library offers the ability to build Qt bindings written in C/C++ to use inside Rust code.
+//! It offers the ability to locate Qt via the [`locate`] module and to build Qt C/C++ code with
+//! the [`build`] module.
 //!
-//! # Content
-//!
-//! This library provides
-//! - A way to locate Qt in [`locate`] module
-//! - A way to build ...
+//! This library is used by `qt-auto-binding` and it's support libraries `qt-auto-binding-build`
+//! and `qt-auto-binding-macros`.
 //!
 //! [`locate`]: locate/index.html
+//! [`build`]: build/index.html
 
 pub mod build;
 pub mod errors;
