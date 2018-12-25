@@ -1,5 +1,5 @@
 TEMPLATE = lib
-TARGET = test
+TARGET = meta
 
 QT = core
 CONFIG += staticlib
@@ -7,8 +7,8 @@ CONFIG += staticlib
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
-    object.cpp \
+    bindings.cpp \
+    qt4-bindings.cpp \
+    qt5-bindings.cpp \
     bindings.cpp
 
-HEADERS += \
-    object.h

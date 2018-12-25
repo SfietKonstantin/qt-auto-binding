@@ -24,6 +24,7 @@ use std::{
 /// Use [`locate`] to find Qt installations.
 ///
 /// [`locate`]: fn.locate.html
+#[derive(Clone, Debug)]
 pub struct QtInstall {
     major_version: Version,
     version: String,

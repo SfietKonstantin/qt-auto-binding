@@ -1,13 +1,11 @@
-mod mod_fs;
 mod errors;
+mod mod_fs;
 
-use parse::mod_fs::{ModuleFsReader, ReadModuleFs};
-use qt_auto_binding_core::{
-    ext::iter::IteratorExt,
-    parse::qobjects::from_stream,
-    Object,
+use self::{
+    errors::{Error, Result},
+    mod_fs::{ModuleFsReader, ReadModuleFs},
 };
-use self::errors::{Error, Result};
+use qt_auto_binding_core::{ext::iter::IteratorExt, parse::qobjects::from_stream, Object};
 use std::{
     collections::HashSet,
     path::{Path, PathBuf},

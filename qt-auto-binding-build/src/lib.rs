@@ -1,17 +1,16 @@
 #![warn(missing_docs)]
 
-extern crate qt_auto_binding_core;
-extern crate qt_binding_build;
-extern crate syn;
-extern crate failure;
-
 mod gen;
 mod parse;
 
-use gen::{header, source};
-use parse::parse;
+use crate::{
+    gen::{header, source},
+    parse::parse,
+};
 use qt_binding_build::build::{build_dir, Builder};
 use std::path::PathBuf;
+
+use std::env;
 
 static FILE_NAME: &str = "bindings";
 

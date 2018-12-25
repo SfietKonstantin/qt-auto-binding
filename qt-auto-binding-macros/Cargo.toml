@@ -2,6 +2,7 @@
 name = "qt-auto-binding-macros"
 version = "0.1.0"
 authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
 
 [lib]
 proc-macro = true

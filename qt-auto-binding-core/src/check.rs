@@ -1,6 +1,6 @@
 //! Checking utilities
 
-use diagnostic::Diagnostic;
+use crate::diagnostic::Diagnostic;
 
 /// Result of a check
 pub type CheckResult = Result<(), Vec<Diagnostic>>;
@@ -79,7 +79,7 @@ impl<T> Checker<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagnostic::Level;
+    use crate::diagnostic::Level;
 
     struct DivByNCheck {
         n: i32,

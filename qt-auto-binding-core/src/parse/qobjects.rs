@@ -4,9 +4,12 @@ mod check;
 mod kw;
 
 use self::check::{UniqueFieldCheck, UniqueQObjectFieldCheck};
-use check::Checker;
-use diagnostic::{Diagnostic, Level};
-use parse::ty::is_qobject;
+use crate::{
+    check::Checker,
+    diagnostic::{Diagnostic, Level},
+    parse::ty::is_qobject,
+    Field, Object,
+};
 use proc_macro2::TokenStream;
 use syn::{
     braced,
@@ -15,7 +18,6 @@ use syn::{
     punctuated::{Iter, Punctuated},
     Ident, Token, Type,
 };
-use {Field, Object};
 
 #[derive(Clone, Eq, Debug, PartialEq)]
 pub(crate) struct PField {
@@ -298,7 +300,8 @@ mod tests {
                     other_value: Vec<String>,
                 }
             }",
-        ).unwrap();
+        )
+        .unwrap();
         let fields = result.fields;
         assert_eq!(fields[0].name, parse_str::<Ident>("qobject").unwrap());
         assert_eq!(fields[0].ty, parse_str::<Type>("QObject").unwrap());
@@ -317,7 +320,8 @@ mod tests {
                     value: i32,
                 },
             }",
-        ).unwrap();
+        )
+        .unwrap();
     }
 
     #[test]
@@ -331,7 +335,8 @@ mod tests {
                     value: i32,
                 }
             }",
-        ).unwrap();
+        )
+        .unwrap();
         let fields = result.fields;
         assert_eq!(fields[0].name, parse_str::<Ident>("qobject").unwrap());
         assert_eq!(fields[0].ty, parse_str::<Type>("QObject").unwrap());

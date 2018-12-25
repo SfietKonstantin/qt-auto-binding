@@ -5,13 +5,19 @@ use std::{
     path::Path,
 };
 
-fn gen_object(object: &Object) -> String {
+fn gen_hooks(object: &Object) -> String {
     #[cfg_attr(rustfmt, rustfmt_skip)]
-        format!(
+    format!(
 r#"void *qt_binding_new_{name}(void *qptr);
-void qt_binding_reset_{name}(void *data);
+void qt_binding_reset_{name}(void *data);"#,
+        name = object.name()
+    )
+}
 
-{name}::{name}(QObject *parent)
+fn gen_implementation(object: &Object) -> String {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    format!(
+r#"{name}::{name}(QObject *parent)
     : QObject(parent)
     , m_data(qt_binding_new_{name}(this))
 {{
@@ -21,28 +27,60 @@ void qt_binding_reset_{name}(void *data);
 {{
     qt_binding_reset_{name}(m_data);
 }}"#,
-            name = object.name(),
-        )
+        name = object.name(),
+    )
+}
+
+fn gen_register(object: &Object) -> String {
+    format!(
+        "    qRegisterMetaType<qt_auto_binding::{} *>();",
+        object.name()
+    )
 }
 
 fn perform_gen(file_path: &Path, objects: &[Object]) -> IoResult<()> {
-    let objects = objects
+    let hooks = objects
         .into_iter()
-        .map(gen_object)
+        .map(gen_hooks)
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    let implementations = objects
+        .into_iter()
+        .map(gen_implementation)
         .collect::<Vec<_>>()
         .join("\n\n");
+
+    let register = objects
+        .into_iter()
+        .map(gen_register)
+        .collect::<Vec<_>>()
+        .join("\n");
 
     #[cfg_attr(rustfmt, rustfmt_skip)]
     let content = format!(
 r#"#include "bindings.h"
 
-namespace qt_bindings {{
+extern "C" {{
+{}
+}}
+
+namespace qt_auto_binding {{
 
 {}
 
+}} // namespace qt_auto_binding
+
+extern "C" {{
+
+void qt_auto_binding_register_meta_types()
+{{
+{}
 }}
+
+}} // extern "C"
 "#,
-        objects
+        hooks, implementations, register
     );
 
     let mut file = File::create(file_path)?;

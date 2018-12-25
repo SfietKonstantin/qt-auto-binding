@@ -1,6 +1,8 @@
-use check::Check;
-use diagnostic::{Diagnostic, Level};
-use parse::{qobjects::PField, ty::is_qobject};
+use crate::{
+    check::Check,
+    diagnostic::{Diagnostic, Level},
+    parse::{qobjects::PField, ty::is_qobject},
+};
 use proc_macro2::Span;
 use std::collections::HashMap;
 use syn::spanned::Spanned;

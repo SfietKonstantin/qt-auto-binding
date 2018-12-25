@@ -1,30 +1,31 @@
-// #![recursion_limit = "128"]
-
 #![cfg_attr(feature = "nightly", feature(proc_macro_diagnostic))]
-
-extern crate proc_macro;
-extern crate proc_macro2;
-extern crate qt_auto_binding_core;
-extern crate quote;
-extern crate syn;
 
 mod ext;
 mod gen;
 
-use ext::diagnostic::DiagnosticExt;
-use gen::qobjects::Objects;
-use proc_macro::TokenStream;
+extern crate proc_macro;
+
+use crate::{ext::diagnostic::DiagnosticExt, gen::qobjects::Objects};
+// use proc_macro::TokenStream;
 use qt_auto_binding_core::parse::qobjects;
 use quote::quote;
 
 #[proc_macro]
-pub fn qobjects(input: TokenStream) -> TokenStream {
+pub fn qobjects(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let result = qobjects::from_stream(input.into());
     match result {
         Ok(objects) => {
             let objects = Objects::from(objects.as_ref());
             let tokens = quote! {
                 #objects
+
+                pub fn register_meta_types() {
+                    unsafe { qt_auto_binding_register_meta_types(); }
+                }
+
+                extern "C" {
+                    fn qt_auto_binding_register_meta_types();
+                }
             };
             tokens.into()
         }
@@ -32,7 +33,7 @@ pub fn qobjects(input: TokenStream) -> TokenStream {
             for diagnostic in diagnostics {
                 diagnostic.emit();
             }
-            TokenStream::new()
+            proc_macro::TokenStream::new()
         }
     }
 }

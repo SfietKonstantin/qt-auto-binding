@@ -6,9 +6,10 @@
 //!
 //! This crate is used to parse the content of `qobjects!`, translating it to the metadata of
 //! QObjects that should be used to generate bindings.
-
-extern crate proc_macro2;
-extern crate syn;
+//!
+//! [`qt_auto_binding`]: ../qt_auto_binding/index.html
+//! [`qt_auto_binding_build`]: ../qt_auto_binding_build/index.html
+//! [`qt_auto_binding_macros`]: ../qt_auto_binding_macros/index.html
 
 pub mod check;
 pub mod diagnostic;

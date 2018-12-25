@@ -1,0 +1,12 @@
+[package]
+name = "test-auto-binding"
+version = "1.0.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
+build = "build.rs"
+
+[dependencies]
+qt-auto-binding = {path = "../../qt-auto-binding"}
+
+[build-dependencies]
+qt-auto-binding-build = {path = "../../qt-auto-binding-build"}

@@ -17,7 +17,6 @@ where
     /// # Examples
     ///
     /// ```
-    /// # extern crate qt_auto_binding_core;
     /// use qt_auto_binding_core::ext::iter::IteratorExt;
     ///
     /// let data = vec![1];

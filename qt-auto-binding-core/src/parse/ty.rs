@@ -2,14 +2,16 @@
 //!
 //! [`Type`]: ../../enum.Type.html
 
-use diagnostic::{Diagnostic, Level};
-use ext::iter::IteratorExt;
+use crate::{
+    diagnostic::{Diagnostic, Level},
+    ext::iter::IteratorExt,
+    Type,
+};
 use proc_macro2::Span;
 use syn::{
     spanned::Spanned, AngleBracketedGenericArguments, GenericArgument, PathArguments, PathSegment,
     TypePath,
 };
-use Type;
 
 /// Parse a [`syn::Type`] into a [`Type`]
 ///

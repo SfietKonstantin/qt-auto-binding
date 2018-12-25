@@ -1,5 +1,5 @@
 TEMPLATE = lib
-TARGET = test
+TARGET = src
 
 QT = core
 CONFIG += staticlib
