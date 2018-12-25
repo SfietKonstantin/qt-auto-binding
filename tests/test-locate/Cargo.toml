@@ -1,0 +1,8 @@
+[package]
+name = "test-core-locate"
+version = "1.0.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
+
+[dependencies]
+qt-binding-build = {path = "../../qt-binding-build"}

@@ -1,0 +1,13 @@
+[package]
+name = "qt-auto-binding"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
+build = "build.rs"
+links = "qt-auto-binding"
+
+[dependencies]
+qt-auto-binding-macros = {path = "../qt-auto-binding-macros"}
+
+[build-dependencies]
+qt-binding-build = {path = "../qt-binding-build"}

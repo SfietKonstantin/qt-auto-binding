@@ -1,0 +1,17 @@
+[package]
+name = "qt-auto-binding-macros"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "0.4"
+qt-auto-binding-core = {path = "../qt-auto-binding-core"}
+quote = "0.6"
+syn = {version = "0.15", features = ["extra-traits"]}
+
+[features]
+nightly = ["qt-auto-binding-core/nightly"]
