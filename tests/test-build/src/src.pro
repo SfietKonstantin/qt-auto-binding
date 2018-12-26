@@ -1,7 +1,7 @@
 TEMPLATE = lib
 TARGET = test
 
-QT = core qml
+QT = core
 CONFIG += staticlib
 
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -12,9 +12,3 @@ SOURCES += \
 
 HEADERS += \
     object.h
-
-RESOURCES += \
-    res.qrc
-
-OTHER_FILES += \
-    test.qml

@@ -1,5 +1,5 @@
 [package]
-name = "test-core-locate"
+name = "test-locate"
 version = "1.0.0"
 authors = ["Lucien XU <sfietkonstantin@free.fr>"]
 edition = "2018"
