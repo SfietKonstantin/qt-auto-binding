@@ -1,6 +1,6 @@
 //! Build a Qt based project
 //!
-//! See the [`Builder`] documentation for more details.
+//! See [`Builder`] documentation for more details.
 //!
 //! [`Builder`]: struct.Builder.html
 
@@ -452,7 +452,9 @@ impl Builder {
     }
 
     fn sys_qt_install_info(dep: &str, key: &str) -> String {
-        env::var(format!("DEP_{}_{}", dep, key)) //
+        let fixed_dep = dep.replace("-", "_").to_uppercase();
+        let key = key.to_uppercase();
+        env::var(format!("DEP_{}_{}", fixed_dep, key)) //
             .unwrap_or_else(|_| {
                 panic!(
                     "Could not find Qt installation from {}. \
