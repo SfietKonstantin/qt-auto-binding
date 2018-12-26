@@ -1,5 +1,5 @@
 #[cfg(qt5)]
-use test_core_build::qt5::{Object, TestApp};
+use test_build::qt5::{Object, TestApp};
 
 #[test]
 #[cfg(qt5)]
