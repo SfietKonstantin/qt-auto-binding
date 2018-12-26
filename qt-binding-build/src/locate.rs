@@ -1,8 +1,8 @@
 //! Locate Qt installation
 //!
-//! See the [`Locator`] documentation for more details.
+//! See [`locate`] documentation for more details.
 //!
-//! [`Locator`]: struct.Locator.html
+//! [`locate`]: fn.locate.html
 
 pub mod errors;
 
