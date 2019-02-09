@@ -21,7 +21,6 @@ where
     I: Fn() -> Option<&'static str>,
     Q: Fn(&Path) -> StdResult<&'static str, String>,
 {
-    #[allow(dead_code)]
     fn new(qt_install_dir: I, qmake_query: Q) -> Self {
         LocatorTestSpi {
             qt_install_dir,
@@ -30,7 +29,6 @@ where
         }
     }
 
-    #[allow(dead_code)]
     fn add_missing(mut self, path: &'static str) -> Self {
         self.missing.insert(path);
         self
