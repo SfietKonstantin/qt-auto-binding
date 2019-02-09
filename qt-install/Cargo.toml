@@ -1,0 +1,5 @@
+[package]
+name = "qt-install"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
