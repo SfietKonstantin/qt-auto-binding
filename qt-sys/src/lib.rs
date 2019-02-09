@@ -11,7 +11,7 @@
 //!
 //! [Qt]: https://www.qt.io
 //! [links]: https://doc.rust-lang.org/cargo/reference/build-scripts.html#the-links-manifest-key
-//! [`qt-binding-build`]: ../qt-binding-build/index.html
+//! [`qt-binding-build`]: ../qt_binding_build/index.html
 //!
 //! # Features
 //!

@@ -64,8 +64,8 @@
 mod tool;
 
 use self::tool::Tool;
-use qt_install::{QtInstall, MajorVersion, lib_name};
 use cc::Build;
+use qt_install::{lib_name, MajorVersion, QtInstall};
 use std::{
     env,
     path::{Path, PathBuf},
@@ -93,7 +93,7 @@ trait ReadMajorVersion {
 impl ReadMajorVersion for MajorVersion {
     fn from_str(version: &str) -> MajorVersion {
         match version {
-            "5" => MajorVersion::Qt5,
+            "Qt5" => MajorVersion::Qt5,
             _ => panic!("Unsupported version {}", version),
         }
     }
@@ -178,8 +178,8 @@ impl Builder {
     /// // builder now contains ["first.cpp", "second.cpp"]
     /// ```
     pub fn file<P>(mut self, path: P) -> Self
-        where
-            P: AsRef<Path>,
+    where
+        P: AsRef<Path>,
     {
         self.files.push(path.as_ref().to_path_buf());
         self
@@ -201,9 +201,9 @@ impl Builder {
     /// // builder now contains ["first.cpp", "second.cpp"]
     /// ```
     pub fn files<P>(mut self, paths: P) -> Self
-        where
-            P: IntoIterator,
-            P::Item: AsRef<Path>,
+    where
+        P: IntoIterator,
+        P::Item: AsRef<Path>,
     {
         self.files = paths
             .into_iter()
@@ -229,8 +229,8 @@ impl Builder {
     /// // builder now contains ["moc_header.cpp", "source.cpp"]
     /// ```
     pub fn moc_file<P>(mut self, path: P) -> Self
-        where
-            P: AsRef<Path>,
+    where
+        P: AsRef<Path>,
     {
         self.moc_files.push(path.as_ref().to_path_buf());
         self
@@ -254,9 +254,9 @@ impl Builder {
     /// // builder now contains ["moc_header1.cpp", "moc_header2.cpp", "source.cpp"]
     /// ```
     pub fn moc_files<P>(mut self, paths: P) -> Self
-        where
-            P: IntoIterator,
-            P::Item: AsRef<Path>,
+    where
+        P: IntoIterator,
+        P::Item: AsRef<Path>,
     {
         self.moc_files = paths
             .into_iter()
@@ -282,8 +282,8 @@ impl Builder {
     /// // builder now contains ["rcc_res.cpp", "source.cpp"]
     /// ```
     pub fn res_file<P>(mut self, path: P) -> Self
-        where
-            P: AsRef<Path>,
+    where
+        P: AsRef<Path>,
     {
         self.res_files.push(path.as_ref().to_path_buf());
         self
@@ -307,9 +307,9 @@ impl Builder {
     /// // builder now contains ["rcc_res1.cpp", "rcc_res2.cpp", "source.cpp"]
     /// ```
     pub fn res_files<P>(mut self, paths: P) -> Self
-        where
-            P: IntoIterator,
-            P::Item: AsRef<Path>,
+    where
+        P: IntoIterator,
+        P::Item: AsRef<Path>,
     {
         self.res_files = paths
             .into_iter()
@@ -368,19 +368,7 @@ impl Builder {
             .chain(res_outputs.iter());
 
         let include_dir = self.qt_install.include_dir();
-
-        // let major_version = self.qt_install.major_version().to_string();
-        // let out_dir_str = out_dir.to_string_lossy().to_string();
-        // let bin_dir_str = self.qt_install.bin_dir().to_string_lossy();
         let lib_dir_str = self.qt_install.lib_dir().to_string_lossy();
-        // let include_dir_str = include_dir.to_string_lossy();
-
-        // println!("cargo:OUT_DIR={}", out_dir_str);
-        // println!("cargo:QT_MAJOR_VERSION={}", major_version);
-        // println!("cargo:QT_VERSION={}", self.qt_install.version());
-        // println!("cargo:QT_BIN_DIR={}", bin_dir_str);
-        // println!("cargo:QT_LIB_DIR={}", lib_dir_str);
-        // println!("cargo:QT_INCLUDE_DIR={}", include_dir_str);
 
         let mut builder = Build::new();
         builder

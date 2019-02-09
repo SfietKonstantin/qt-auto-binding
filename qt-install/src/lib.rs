@@ -1,13 +1,13 @@
 #![warn(missing_docs)]
 
-//! Support library for [`qt-sys`], [`qt-sys-locate`] and [`qt-binding-build`]
+//! Support library for [`qt-sys`], [`qt-locate`] and [`qt-binding-build`]
 //!
 //! This support library provides [`QtInstall`], a way to describe a Qt installation.
 //!
 //! [`QtInstall`]: struct.QtInstall.html
-//! [`qt-sys`]: ../qt-sys/index.html
-//! [`qt-sys-locate`]: ../qt-sys-locate/index.html
-//! [`qt-binding-build`]: ../qt-binding-build/index.html
+//! [`qt-sys`]: ../qt_sys/index.html
+//! [`qt-locate`]: ../qt_locate/index.html
+//! [`qt-binding-build`]: ../qt_binding_build/index.html
 
 use std::{
     fmt,
@@ -26,7 +26,7 @@ pub enum MajorVersion {
 impl fmt::Display for MajorVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            MajorVersion::Qt5 => write!(f, "5"),
+            MajorVersion::Qt5 => write!(f, "Qt5"),
         }
     }
 }
@@ -120,6 +120,12 @@ const RCC_EXEC: &str = "rcc";
 #[cfg(windows)]
 const RCC_EXEC: &str = "rcc.exe";
 
+fn version_suffix(version: &MajorVersion) -> &str {
+    match version {
+        MajorVersion::Qt5 => "5",
+    }
+}
+
 /// Platform-dependent Qt library name
 ///
 /// This function deduces the full name of a Qt library based
@@ -144,10 +150,10 @@ pub fn lib_name(lib: &str, version: &MajorVersion) -> String {
         if cfg!(target_os = "macos") {
             format!("Qt{}", lib)
         } else {
-            format!("Qt{}{}", version, lib)
+            format!("Qt{}{}", version_suffix(version), lib)
         }
     } else if cfg!(windows) {
-        format!("Qt{}{}", version, lib)
+        format!("Qt{}{}", version_suffix(version), lib)
     } else {
         panic!("Unsupported OS");
     }
@@ -216,7 +222,6 @@ mod tests {
             fn test_lib_name() {
                 assert_eq!(lib_name("Core", &MajorVersion::Qt5), "QtCore");
             }
-
 
             #[test]
             fn test_lib_file() {
