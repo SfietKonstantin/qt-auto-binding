@@ -5,5 +5,8 @@ authors = ["Lucien XU <sfietkonstantin@free.fr>"]
 edition = "2018"
 build = "build.rs"
 
+[dependencies]
+qt-sys = {path = "../../qt-sys", features = ["qml"]}
+
 [build-dependencies]
 qt-binding-build = {path = "../../qt-binding-build", features = ["qml"]}

@@ -1,8 +1,6 @@
-#[cfg(qt5)]
 use test_build::qt5::{Object, TestApp};
 
 #[test]
-#[cfg(qt5)]
 fn test_set_value() {
     let mut object = Object::new();
 
@@ -14,7 +12,6 @@ fn test_set_value() {
 }
 
 #[test]
-#[cfg(qt5)]
 fn test_run_app() {
     TestApp::run();
 }
