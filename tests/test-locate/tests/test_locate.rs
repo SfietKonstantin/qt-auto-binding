@@ -1,6 +1,7 @@
-use qt_binding_build::locate::locate;
+use qt_locate::locate;
 
 #[test]
 fn test_locate() {
-    locate().unwrap();
+    let modules = ["Core", "Gui", "Qml", "Quick", "Network", "Sql"];
+    locate(&modules);
 }

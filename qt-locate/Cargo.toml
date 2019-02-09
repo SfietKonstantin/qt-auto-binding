@@ -1,8 +1,8 @@
 [package]
-name = "test-locate"
-version = "1.0.0"
+name = "qt-locate"
+version = "0.1.0"
 authors = ["Lucien XU <sfietkonstantin@free.fr>"]
 edition = "2018"
 
 [dependencies]
-qt-locate = {path = "../../qt-locate"}
+qt-install = {path = "../qt-install"}

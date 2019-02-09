@@ -1,12 +1,13 @@
 [package]
-name = "qt-binding-build"
+name = "qt-sys"
 version = "0.1.0"
 authors = ["Lucien XU <sfietkonstantin@free.fr>"]
 edition = "2018"
+build = "build.rs"
+links = "qt"
 
-[dependencies]
-cc = "1.0"
-qt-install = {path = "../qt-install"}
+[build-dependencies]
+qt-locate = {path = "../qt-locate"}
 
 [features]
 gui = []

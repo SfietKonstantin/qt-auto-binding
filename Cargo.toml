@@ -2,4 +2,7 @@
 
 members = [
     "qt-binding-build",
+    "qt-install",
+    "qt-locate",
+    "qt-sys",
 ]

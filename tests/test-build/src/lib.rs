@@ -5,7 +5,6 @@
 //!
 //! This test only supports Qt 5. If Qt 4 is available, this test will not run.
 
-#[cfg(qt5)]
 pub mod qt5 {
     use std::os::raw::c_void;
 
