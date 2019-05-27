@@ -1,0 +1,14 @@
+[package]
+name = "qt-binding"
+version = "0.1.0"
+authors = ["Lucien XU <sfietkonstantin@free.fr>"]
+edition = "2018"
+
+[dependencies]
+qt-sys = {path = "../qt-sys"}
+
+[build-dependencies]
+qt-binding-build = {path = "../qt-binding-build"}
+
+[features]
+meta = []
