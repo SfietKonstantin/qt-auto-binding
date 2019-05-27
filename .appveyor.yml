@@ -32,8 +32,8 @@ build_script:
   - cargo build --verbose
 
 test_script:
-  - cargo test --verbose
   - set PATH=%QT_INSTALL_DIR%\bin;%PATH%
+  - cargo test --verbose
   - cd tests && cargo test --verbose
 
 cache:

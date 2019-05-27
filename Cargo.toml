@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "qt-binding",
     "qt-binding-build",
     "qt-install",
     "qt-locate",
