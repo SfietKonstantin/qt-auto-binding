@@ -32,7 +32,7 @@ impl<'a> Tool<'a> {
     pub(crate) fn exec(&self, out_dir: &Path, input: &Path) -> PathBuf {
         let output = input
             .file_stem()
-            .expect(&format!("{} takes files as input.", self.name));
+            .unwrap_or_else(|| panic!("{} takes files as input.", self.name));
         let output = out_dir.join(format!("{}_{}.cpp", self.name, output.to_string_lossy()));
 
         let command = {
@@ -41,7 +41,7 @@ impl<'a> Tool<'a> {
                 OsString::from("-o"),
                 OsString::from(&output),
             ];
-            let args = self.args.iter().chain(args.into_iter());
+            let args = self.args.iter().chain(args.iter());
 
             Command::new(self.tool).args(args).output().unwrap()
         };
