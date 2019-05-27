@@ -1,6 +1,6 @@
 [workspace]
 
 members = [
-    "test-locate",
     "test-build",
+    "test-locate",
 ]

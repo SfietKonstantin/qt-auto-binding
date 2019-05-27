@@ -1,9 +1,7 @@
-//! `qt-binding-core` build test
+//! `qt-binding-build` test
 //!
-//! This crate contains one test, that is used to test `qt-binding-core`'s capability to build
+//! This crate contains one test, that is used to test `qt-binding-build`'s capability to build
 //! a Qt project. This crate's test should run on a CI containing a Qt install.
-//!
-//! This test only supports Qt 5. If Qt 4 is available, this test will not run.
 
 pub mod qt5 {
     use std::os::raw::c_void;
