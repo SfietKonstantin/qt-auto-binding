@@ -113,7 +113,7 @@ impl TryFrom<&'_ Variant> for String {
     }
 }
 
-type VariantIteratorRef<'a, 'b> = Box<&'a mut Iterator<Item = &'b Variant>>;
+type VariantIteratorRef<'a, 'b> = Box<&'a mut dyn Iterator<Item=&'b Variant>>;
 
 extern "C" fn c_list_fill(
     input: *mut c_void,
