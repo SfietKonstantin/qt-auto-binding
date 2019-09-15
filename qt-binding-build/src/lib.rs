@@ -11,7 +11,7 @@
 //! `Builder` will be in charge of generating files, delegating the build to [`cc::Build`].
 //!
 //! [`Builder`]: struct.Builder.html
-//! [`cc::Build`]: ../../cc/struct.Build.html
+//! [`cc::Build`]: ../cc/struct.Build.html
 //!
 //! # Qt installation
 //!
@@ -19,6 +19,8 @@
 //! `qt-sys` as a dependency (not a build dependency).
 //!
 //! To locate Qt `qt-sys` uses `qmake`, so locating Qt is based on locating `qmake`.
+//!
+//! [`qt-sys`]: ../qt_sys/index.html
 //!
 //! # Locating `qmake`
 //!
