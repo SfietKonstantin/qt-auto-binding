@@ -1,8 +1,7 @@
 use crate::variant::{TryFromError, Variant};
-use std::iter::FromIterator;
 use std::convert::TryFrom;
-use std::ffi::c_void;
-use std::os::raw::c_char;
+use std::iter::FromIterator;
+use std::os::raw::{c_char, c_void};
 use std::slice::from_raw_parts;
 
 macro_rules! gen_from_primitive {
@@ -116,7 +115,7 @@ impl TryFrom<&'_ Variant> for String {
     }
 }
 
-type VariantIteratorRef<'a, 'b> = Box<&'a mut dyn Iterator<Item=&'b Variant>>;
+type VariantIteratorRef<'a, 'b> = Box<&'a mut dyn Iterator<Item = &'b Variant>>;
 
 extern "C" fn c_list_fill(
     input: *mut c_void,

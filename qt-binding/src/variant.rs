@@ -81,9 +81,9 @@
 //! ```
 
 use std::convert::TryFrom;
-use std::ffi::{c_void, CStr};
+use std::ffi::CStr;
 use std::fmt;
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 
 mod convert;
 
