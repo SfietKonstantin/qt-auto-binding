@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export QT_QPA_PLATFORM=offscreen
 set -euxo pipefail
 
 cargo build --verbose

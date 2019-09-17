@@ -68,6 +68,7 @@ mod tool;
 use self::tool::Tool;
 use cc::Build;
 use qt_install::{lib_name, MajorVersion, QtInstall};
+use std::collections::HashMap;
 use std::env;
 use std::path::{Path, PathBuf};
 
@@ -107,6 +108,7 @@ pub struct Builder {
     files: Vec<PathBuf>,
     moc_files: Vec<PathBuf>,
     res_files: Vec<PathBuf>,
+    definitions: HashMap<&'static str, Option<&'static str>>,
 }
 
 impl Builder {
@@ -159,7 +161,29 @@ impl Builder {
             files: Vec::new(),
             moc_files: Vec::new(),
             res_files: Vec::new(),
+            definitions: HashMap::new(),
         }
+    }
+
+    /// Add a definition (`-D` compiler flag)
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// use qt_binding_build::Builder;
+    ///
+    /// Builder::new()
+    ///     .file("first.cpp")
+    ///     .define("MY_FLAG", "MY_VALUE");
+    ///
+    /// // first.cpp will be compiled with `-DMY_FLAG=MY_VALUE`
+    /// ```
+    pub fn define<V>(&mut self, key: &'static str, value: V) -> &mut Self
+    where
+        V: Into<Option<&'static str>>,
+    {
+        self.definitions.insert(key, value.into());
+        self
     }
 
     /// Add a source file to be compiled
@@ -377,6 +401,10 @@ impl Builder {
             .include(out_dir)
             .include(include_dir)
             .flag_if_supported("-std=c++11");
+
+        for (key, value) in &self.definitions {
+            builder.define(key, value.clone());
+        }
 
         builder.compile(name);
 
