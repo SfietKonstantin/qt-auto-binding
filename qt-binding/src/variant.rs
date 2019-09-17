@@ -80,12 +80,10 @@
 //! assert_eq!(variant_list, expected_variant_list);
 //! ```
 
-use std::{
-    convert::TryFrom,
-    ffi::{c_void, CStr},
-    fmt,
-    os::raw::c_char,
-};
+use std::convert::TryFrom;
+use std::ffi::{c_void, CStr};
+use std::fmt;
+use std::os::raw::c_char;
 
 mod convert;
 

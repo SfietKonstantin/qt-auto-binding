@@ -1,6 +1,9 @@
 use crate::variant::{TryFromError, Variant};
 use std::iter::FromIterator;
-use std::{convert::TryFrom, ffi::c_void, os::raw::c_char, slice::from_raw_parts};
+use std::convert::TryFrom;
+use std::ffi::c_void;
+use std::os::raw::c_char;
+use std::slice::from_raw_parts;
 
 macro_rules! gen_from_primitive {
     ($ty:ty => $f:ident) => {

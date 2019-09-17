@@ -9,10 +9,8 @@
 //! [`qt-locate`]: ../qt_locate/index.html
 //! [`qt-binding-build`]: ../qt_binding_build/index.html
 
-use std::{
-    fmt,
-    path::{Path, PathBuf},
-};
+use std::fmt;
+use std::path::{Path, PathBuf};
 
 /// Qt major version
 ///

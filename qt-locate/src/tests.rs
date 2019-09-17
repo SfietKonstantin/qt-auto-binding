@@ -4,12 +4,14 @@ mod unix;
 mod windows;
 
 use super::*;
-use std::{collections::HashSet, path::Path, result::Result as StdResult};
+use std::collections::HashSet;
+use std::path::Path;
+use std::result;
 
 struct LocatorTestSpi<I, Q>
 where
     I: Fn() -> Option<&'static str>,
-    Q: Fn(&Path) -> StdResult<&'static str, String>,
+    Q: Fn(&Path) -> result::Result<&'static str, String>,
 {
     qt_install_dir: I,
     qmake_query: Q,
@@ -19,7 +21,7 @@ where
 impl<I, Q> LocatorTestSpi<I, Q>
 where
     I: Fn() -> Option<&'static str>,
-    Q: Fn(&Path) -> StdResult<&'static str, String>,
+    Q: Fn(&Path) -> result::Result<&'static str, String>,
 {
     fn new(qt_install_dir: I, qmake_query: Q) -> Self {
         LocatorTestSpi {
@@ -38,7 +40,7 @@ where
 impl<I, Q> LocateSpi for LocatorTestSpi<I, Q>
 where
     I: Fn() -> Option<&'static str>,
-    Q: Fn(&Path) -> StdResult<&'static str, String>,
+    Q: Fn(&Path) -> result::Result<&'static str, String>,
 {
     fn qt_install_dir_env(&self) -> Option<String> {
         (self.qt_install_dir)().map(ToString::to_string)

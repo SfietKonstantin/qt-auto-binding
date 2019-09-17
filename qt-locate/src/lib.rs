@@ -11,10 +11,8 @@ mod qmake;
 
 pub use qt_install::{lib_file, MajorVersion, QtInstall};
 
-use std::{
-    env,
-    path::{Path, PathBuf},
-};
+use std::env;
+use std::path::{Path, PathBuf};
 
 #[cfg(unix)]
 const QMAKE_EXEC: &str = "qmake";
