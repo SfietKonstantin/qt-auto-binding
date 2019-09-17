@@ -1,4 +1,5 @@
-use std::{path::Path, process::Command};
+use std::path::Path;
+use std::process::Command;
 
 pub fn query(qmake_path: &Path) -> Vec<u8> {
     let command = Command::new(qmake_path)

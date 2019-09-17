@@ -68,10 +68,8 @@ mod tool;
 use self::tool::Tool;
 use cc::Build;
 use qt_install::{lib_name, MajorVersion, QtInstall};
-use std::{
-    env,
-    path::{Path, PathBuf},
-};
+use std::env;
+use std::path::{Path, PathBuf};
 
 /// Provides the build directory used for build scripts
 ///
@@ -179,7 +177,7 @@ impl Builder {
     ///
     /// // builder now contains ["first.cpp", "second.cpp"]
     /// ```
-    pub fn file<P>(mut self, path: P) -> Self
+    pub fn file<P>(&mut self, path: P) -> &mut Self
     where
         P: AsRef<Path>,
     {
@@ -202,7 +200,7 @@ impl Builder {
     ///
     /// // builder now contains ["first.cpp", "second.cpp"]
     /// ```
-    pub fn files<P>(mut self, paths: P) -> Self
+    pub fn files<P>(&mut self, paths: P) -> &mut Self
     where
         P: IntoIterator,
         P::Item: AsRef<Path>,
@@ -230,7 +228,7 @@ impl Builder {
     ///
     /// // builder now contains ["moc_header.cpp", "source.cpp"]
     /// ```
-    pub fn moc_file<P>(mut self, path: P) -> Self
+    pub fn moc_file<P>(&mut self, path: P) -> &mut Self
     where
         P: AsRef<Path>,
     {
@@ -255,7 +253,7 @@ impl Builder {
     ///
     /// // builder now contains ["moc_header1.cpp", "moc_header2.cpp", "source.cpp"]
     /// ```
-    pub fn moc_files<P>(mut self, paths: P) -> Self
+    pub fn moc_files<P>(&mut self, paths: P) -> &mut Self
     where
         P: IntoIterator,
         P::Item: AsRef<Path>,
@@ -283,7 +281,7 @@ impl Builder {
     ///
     /// // builder now contains ["rcc_res.cpp", "source.cpp"]
     /// ```
-    pub fn res_file<P>(mut self, path: P) -> Self
+    pub fn res_file<P>(&mut self, path: P) -> &mut Self
     where
         P: AsRef<Path>,
     {
@@ -308,7 +306,7 @@ impl Builder {
     ///
     /// // builder now contains ["rcc_res1.cpp", "rcc_res2.cpp", "source.cpp"]
     /// ```
-    pub fn res_files<P>(mut self, paths: P) -> Self
+    pub fn res_files<P>(&mut self, paths: P) -> &mut Self
     where
         P: IntoIterator,
         P::Item: AsRef<Path>,

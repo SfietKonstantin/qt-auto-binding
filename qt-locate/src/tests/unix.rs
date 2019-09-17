@@ -6,7 +6,8 @@ mod linux;
 #[cfg(target_os = "macos")]
 mod macos;
 
-use crate::{tests::LocatorTestSpi, Locator, QtInfo};
+use crate::tests::LocatorTestSpi;
+use crate::{Locator, QtInfo};
 use std::path::Path;
 
 #[test]
