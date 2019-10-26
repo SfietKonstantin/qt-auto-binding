@@ -11,5 +11,5 @@ fi
 
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]
 then
-    brew install qt
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install qt
 fi
