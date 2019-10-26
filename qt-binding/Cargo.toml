@@ -13,5 +13,5 @@ futures-util-preview = {version = "=0.3.0-alpha.18", optional = true}
 qt-binding-build = {path = "../qt-binding-build"}
 
 [features]
-gui = ["qt-sys/gui"]
+gui = ["qt-sys/gui", "qt-binding-build/gui"]
 futures-executor = ["futures-core-preview", "futures-util-preview"]
