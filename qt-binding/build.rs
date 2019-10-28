@@ -8,6 +8,10 @@ fn main() {
     {
         builder.define("QT_BINDING_WITH_GUI", "1");
     }
+    #[cfg(feature = "widgets")]
+    {
+        builder.define("QT_BINDING_WITH_WIDGETS", "1");
+    }
 
     #[cfg(feature = "futures-executor")]
     {

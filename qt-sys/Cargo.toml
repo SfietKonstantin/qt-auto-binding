@@ -13,3 +13,4 @@ qt-locate = {path = "../qt-locate"}
 gui = []
 qml = ["gui"]
 quick = ["qml"]
+widgets = ["gui"]

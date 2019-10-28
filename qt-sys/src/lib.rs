@@ -21,6 +21,7 @@
 //! - `gui` enables linking against `QtGui`
 //! - `qml` enables linking against `QtQml`
 //! - `quick` enables linking against `QtQuick`
+//! - `widgets` enables linking against `QtWidgets`
 //!
 //! # Locating Qt
 //!

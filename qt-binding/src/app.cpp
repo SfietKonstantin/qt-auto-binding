@@ -1,7 +1,11 @@
 #ifndef QT_BINDING_WITH_GUI
 #include <QtCore/QCoreApplication>
 #else // QT_BINDING_WITH_GUI
+#ifndef QT_BINDING_WITH_WIDGETS
 #include <QtGui/QGuiApplication>
+#else // QT_BINDING_WITH_WIDGETS
+#include <QtWidgets/QApplication>
+#endif // QT_BINDING_WITH_WIDGETS
 #endif // QT_BINDING_WITH_GUI
 
 #include <memory>
@@ -36,7 +40,11 @@ namespace qt_binding {
 #ifndef QT_BINDING_WITH_GUI
 using Application = QCoreApplication;
 #else // QT_BINDING_WITH_GUI
+#ifndef QT_BINDING_WITH_WIDGETS
 using Application = QGuiApplication;
+#else // QT_BINDING_WITH_WIDGETS
+using Application = QApplication;
+#endif
 #endif // QT_BINDING_WITH_GUI
 
 class AppContainer
