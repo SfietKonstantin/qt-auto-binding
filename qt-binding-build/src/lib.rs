@@ -48,6 +48,7 @@
 //! - `gui` enables linking against `QtGui`
 //! - `qml` enables linking against `QtQml`
 //! - `quick` enables linking against `QtQuick`
+//! - `widgets` enables linking against `QtWidgets`
 //!
 //!
 //! # Examples
@@ -418,13 +419,14 @@ impl Builder {
         if cfg!(feature = "gui") {
             self.link_lib("Gui");
         }
-
         if cfg!(feature = "qml") {
             self.link_lib("Qml");
         }
-
         if cfg!(feature = "quick") {
             self.link_lib("Quick");
+        }
+        if cfg!(feature = "widgets") {
+            self.link_lib("Widgets");
         }
     }
 

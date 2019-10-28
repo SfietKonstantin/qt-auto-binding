@@ -12,3 +12,4 @@ qt-install = {path = "../qt-install"}
 gui = []
 qml = ["gui"]
 quick = ["qml"]
+widgets = ["gui"]

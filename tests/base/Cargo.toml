@@ -3,5 +3,4 @@
 members = [
     "test-build",
     "test-locate",
-    "test-qt-binding-app",
 ]

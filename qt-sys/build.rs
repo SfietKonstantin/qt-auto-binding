@@ -28,5 +28,8 @@ fn modules() -> Vec<&'static str> {
     if cfg!(feature = "quick") {
         modules.push("Quick");
     }
+    if cfg!(feature = "widgets") {
+        modules.push("Widgets");
+    }
     modules
 }
