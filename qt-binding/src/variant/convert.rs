@@ -106,7 +106,7 @@ impl TryFrom<&'_ Variant> for String {
         let mut value = String::default();
         if unsafe {
             let data: *mut String = &mut value;
-            qt_binding_variant_fill_string(variant.ptr, data as *mut c_void, Some(rs_string_fill))
+            qt_binding_variant_fill_string(variant.ptr, data as *mut c_void, rs_string_fill)
         } {
             Ok(value)
         } else {
@@ -117,16 +117,10 @@ impl TryFrom<&'_ Variant> for String {
 
 type VariantIteratorRef<'a, 'b> = Box<&'a mut dyn Iterator<Item = &'b Variant>>;
 
-extern "C" fn c_list_fill(
-    input: *mut c_void,
-    output: *mut c_void,
-    append: Option<CListAppendFunc>,
-) {
-    if let Some(append) = append {
-        let input = unsafe { &mut *(input as *mut VariantIteratorRef) };
-        for variant in input.as_mut() {
-            append(output, variant.ptr);
-        }
+extern "C" fn c_list_fill(input: *mut c_void, output: *mut c_void, append: CListAppendFunc) {
+    let input = unsafe { &mut *(input as *mut VariantIteratorRef) };
+    for variant in input.as_mut() {
+        append(output, variant.ptr);
     }
 }
 
@@ -142,7 +136,7 @@ impl<'a> FromIterator<&'a Variant> for Variant {
         let input: *mut VariantIteratorRef = &mut input;
 
         Variant {
-            ptr: unsafe { qt_binding_variant_create_list(input as *mut c_void, Some(c_list_fill)) },
+            ptr: unsafe { qt_binding_variant_create_list(input as *mut c_void, c_list_fill) },
         }
     }
 }
@@ -159,7 +153,7 @@ impl TryFrom<&'_ Variant> for Vec<Variant> {
         let mut value = Vec::default();
         if unsafe {
             let data: *mut Vec<Variant> = &mut value;
-            qt_binding_variant_fill_list(variant.ptr, data as *mut c_void, Some(rs_list_fill))
+            qt_binding_variant_fill_list(variant.ptr, data as *mut c_void, rs_list_fill)
         } {
             Ok(value)
         } else {
@@ -184,7 +178,7 @@ impl From<Vec<Variant>> for Variant {
 
 type CListAppendFunc = extern "C" fn(output: *mut c_void, variant: *const c_void);
 type CListFillFunc =
-    extern "C" fn(input: *mut c_void, output: *mut c_void, append: Option<CListAppendFunc>);
+    extern "C" fn(input: *mut c_void, output: *mut c_void, append: CListAppendFunc);
 
 type RsStringFillFunc = extern "C" fn(output: *mut c_void, input: *const c_char, input_size: u32);
 type RsListFillFunc = extern "C" fn(output: *mut c_void, input: *mut c_void);
@@ -198,10 +192,7 @@ extern "C" {
     fn qt_binding_variant_create_f32(value: f32) -> *mut c_void;
     fn qt_binding_variant_create_f64(value: f64) -> *mut c_void;
     fn qt_binding_variant_create_string(value: *const c_char, size: u32) -> *mut c_void;
-    fn qt_binding_variant_create_list(
-        input: *mut c_void,
-        fill: Option<CListFillFunc>,
-    ) -> *mut c_void;
+    fn qt_binding_variant_create_list(input: *mut c_void, fill: CListFillFunc) -> *mut c_void;
 
     fn qt_binding_variant_fill_bool(variant: *const c_void, value: *mut bool) -> bool;
     fn qt_binding_variant_fill_i32(variant: *const c_void, value: *mut i32) -> bool;
@@ -213,12 +204,12 @@ extern "C" {
     fn qt_binding_variant_fill_string(
         variant: *const c_void,
         output: *mut c_void,
-        fill: Option<RsStringFillFunc>,
+        fill: RsStringFillFunc,
     ) -> bool;
     fn qt_binding_variant_fill_list(
         variant: *const c_void,
         output: *mut c_void,
-        fill: Option<RsListFillFunc>,
+        fill: RsListFillFunc,
     ) -> bool;
 }
 
