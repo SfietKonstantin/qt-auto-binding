@@ -401,7 +401,7 @@ impl Builder {
             .files(files)
             .include(out_dir)
             .include(include_dir)
-            .flag_if_supported("-std=c++11");
+            .flag_if_supported("-std=c++14");
 
         for (key, value) in &self.definitions {
             builder.define(key, value.clone());
